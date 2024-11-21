@@ -3,6 +3,15 @@ import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-      <Navbar/>
-  );
+      <div>
+          <Navbar/>
+          <div className={"inline-flex content-evenly"}>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+              <FoodCard/>
+          </div>
+      </div>
+        );
 }
