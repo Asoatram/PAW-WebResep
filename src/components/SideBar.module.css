@@ -1,0 +1,45 @@
+.sidebar {
+  width: 12%;
+  padding: 20px;
+  height: 100vh; /* Full viewport height */
+  border-right: 1.5px solid #ddd;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  font-size: 1em;
+  color: #333;
+  padding: 8px; /* Added padding for better spacing */
+  border-radius: 4px; /* Optional: Rounded corners for the hover effect */
+  transition: background-color 0.3s; /* Smooth transition for hover */
+}
+
+.item:hover {
+  background-color: #f0f0f0; /* Change to any color you'd like for the hover effect */
+  cursor: pointer; /* Changes cursor to pointer on hover */
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+  color: black;
+}
+
+.savedIcon {
+  width: 30px;
+  height: 30px;
+}
