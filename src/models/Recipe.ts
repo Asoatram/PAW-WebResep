@@ -25,6 +25,7 @@ const RecipeSchema = new mongoose.Schema({
     tags: { type: [String], required: true },
 }, { collection: 'Recipes' });
 
-const Recipe = mongoose.model('Recipes', RecipeSchema);
+// Avoid OverwriteModelError by checking if the model is already defined
+const Recipe = mongoose.models.Recipes || mongoose.model('Recipes', RecipeSchema);
 
 export default Recipe;

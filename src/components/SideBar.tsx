@@ -1,7 +1,9 @@
 import React from 'react';
 import styles from './SideBar.module.css';
 
-export default function Sidebar() {
+
+
+export default function Sidebar( ) {
     return (
         <div className={styles.sidebar}>
             {/* Discover Section */}

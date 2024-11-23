@@ -2,7 +2,6 @@
 
 
 import React from 'react';
-=======
 
 interface FoodCardProps {
   title: string;
@@ -14,6 +13,7 @@ interface FoodCardProps {
 
 function FoodCard({title, description, imageSrc, author, rating }: FoodCardProps) {
   return (
+      <button>
     <div className="w-[250px] h-[350px] mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
       <div className="flex justify-center p-4">
         <div className="w-[180px] h-[180px] bg-gray-300 rounded-lg flex items-center justify-center">
@@ -39,6 +39,7 @@ function FoodCard({title, description, imageSrc, author, rating }: FoodCardProps
         </div>
       </div>
     </div>
+      </button>
   );
 }
 
