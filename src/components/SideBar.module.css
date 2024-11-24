@@ -1,39 +1,45 @@
-/* Styling Sidebar */
 .sidebar {
-  width: 200px;
-  height: 100vh;
-  padding: 16px;
-  border-right: 1px solid #ddd; /* Garis pembatas */
-  display: flex;
-  flex-direction: column;
-  gap: 16px; /* Spasi antar elemen */
-  box-sizing: border-box;
+  width: 12%;
+  padding: 20px;
+  height: 100vh; /* Full viewport height */
+  border-right: 1.5px solid #ddd;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box; /* Ensures padding is included in the width */
 }
 
-.sidebar .item {
+.section {
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.item {
   display: flex;
-  align-items: center; /* Menjaga ikon dan teks sejajar */
-  padding: 8px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  align-items: center;
+  margin: 8px 0;
+  font-size: 1em;
   color: #333;
-  text-decoration: none;
+  padding: 8px; /* Added padding for better spacing */
+  border-radius: 4px; /* Optional: Rounded corners for the hover effect */
+  transition: background-color 0.3s; /* Smooth transition for hover */
 }
 
-.sidebar .item:hover {
-  background-color: #f9f9f9;
+.item:hover {
+  background-color: #f0f0f0; /* Change to any color you'd like for the hover effect */
+  cursor: pointer; /* Changes cursor to pointer on hover */
 }
 
-.sidebar .icon {
-  margin-right: 8px;
-  width: 24px;
-  height: 24px;
+.icon {
+  margin-right: 10px;
+  font-size: 1.2em;
+  color: black;
 }
 
-/* Judul bagian seperti Discover dan Categories */
-.sidebar .title {
-  font-size: 16px;
-  font-weight: bold; /* Tetap bold */
-  margin-bottom: 8px; /* Tambahkan spasi di bawah judul */
-  color: #333; /* Warna teks judul */
+.savedIcon {
+  width: 30px;
+  height: 30px;
 }
