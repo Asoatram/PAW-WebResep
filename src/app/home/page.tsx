@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
 import FoodCard from "@/components/Card";
+import Carousel from "@/components/Carousel";
 
 interface recipe{
     title: string;
@@ -35,7 +36,7 @@ export default function Main() {
 
     return (
         <div>
-            <p>Hello Everyone</p>
+            <p>Hello Everyone!</p>
             <hr/>
             {/* Render fetched recipes */}
             <div className="grid grid-cols-4 gap-4 m-2">
@@ -44,7 +45,7 @@ export default function Main() {
                         id={recipe._id}
                         key={index}
                         title={recipe.title}
-                        description="test"
+                        description={recipe.description}
                         imageSrc={recipe.image_url}
                         author={recipe.author}
                         rating={recipe.difficulty}

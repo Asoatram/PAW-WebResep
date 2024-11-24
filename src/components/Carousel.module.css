@@ -1,0 +1,25 @@
+.carousel-container {
+    width: 100%;
+    max-width: 800px; /* Adjust as needed */
+    margin: auto;
+}
+
+.carousel-slide {
+    position: relative;
+}
+
+.carousel-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px; /* Optional: Rounded corners */
+}
+
+.carousel-caption {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    padding: 10px;
+    border-radius: 5px;
+}
