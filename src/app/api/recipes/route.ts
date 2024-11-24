@@ -4,14 +4,21 @@ import connectDB from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 
 // GET method
-export async function GET() {
+export async function GET(req: Request) {
     await connectDB(); // Connect to the database
+    const { searchParams } = new URL(req.url);
+    const param = searchParams.get('id')
 
-    try {
-        const recipes = await Recipe.find({});
-        return NextResponse.json(recipes, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch recipes', details: error }, { status: 500 });
+    if(param){
+     const recipes = await Recipe.find({_id : param})
+     return NextResponse.json(recipes, {status: 200});
+    }else {
+        try {
+            const recipes = await Recipe.find({});
+            return NextResponse.json(recipes, {status: 200});
+        } catch (error) {
+            return NextResponse.json({error: 'Failed to fetch recipes', details: error}, {status: 500});
+        }
     }
 }
 

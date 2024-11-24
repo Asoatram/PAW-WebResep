@@ -1,4 +1,6 @@
 .sidebar {
+  position: sticky; /* No need for !important */
+  top: 0; /* Ensure it sticks to the top */
   width: 12%;
   padding: 20px;
   height: 100vh; /* Full viewport height */

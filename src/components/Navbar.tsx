@@ -8,7 +8,7 @@ export default function Navbar(){
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="" style={{background: "#9CDBA6"}}>
+        <nav className="sticky" style={{background: "#9CDBA6"}}>
             <div className="w-full">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}

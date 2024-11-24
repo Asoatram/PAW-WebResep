@@ -2,6 +2,15 @@
 import { useEffect, useState } from "react";
 import FoodCard from "@/components/Card";
 
+interface recipe{
+    title: string;
+    description: string;
+    image_url: string;
+    author: string;
+    rating: number;
+    difficulty: string;
+}
+
 export default function Main() {
     const [recipes, setRecipes] = useState([]); // State to store fetched data
 
@@ -27,31 +36,22 @@ export default function Main() {
     return (
         <div>
             <p>Hello Everyone</p>
-            <hr />
+            <hr/>
             {/* Render fetched recipes */}
-            <div className="flex flex-wrap m-2">
-                {recipes.reduce((rows, recipe, index) => {
-                    // Create a new row every 4 items
-                    if (index % 4 === 0) {
-                        rows.push([]);
-                    }
-                    rows[rows.length - 1].push(recipe);
-                    return rows;
-                }, []).map((row, rowIndex) => (
-                    <div className="flex justify-between w-full mb-4" key={rowIndex}>
-                        {row.map((recipe, colIndex) => (
-                            <FoodCard
-                                key={colIndex}
-                                title={recipe.title}
-                                description="test"
-                                imageSrc="alt"
-                                author={recipe.author}
-                                rating={recipe.difficulty}
-                            />
-                        ))}
-                    </div>
+            <div className="grid grid-cols-4 gap-4 m-2">
+                {recipes.map((recipe, index) => (
+                    <FoodCard
+                        id={recipe._id}
+                        key={index}
+                        title={recipe.title}
+                        description="test"
+                        imageSrc={recipe.image_url}
+                        author={recipe.author}
+                        rating={recipe.difficulty}
+                    />
                 ))}
             </div>
+
 
         </div>
     );

@@ -5,7 +5,7 @@ import styles from './SideBar.module.css';
 
 export default function Sidebar( ) {
     return (
-        <div className={styles.sidebar}>
+        <div className={styles.sidebar} >
             {/* Discover Section */}
             <div className={styles.section}>
                 <h2 className={styles.title}>Discover</h2>
