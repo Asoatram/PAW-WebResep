@@ -13,7 +13,6 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoggedIn, setLoggedIn] = useState(false);
-
     // Check for the token cookie when the component mounts
     useEffect(() => {
         console.log("test")
@@ -26,7 +25,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     }, []); // Empty dependency array means this runs once on mount
 
-    const login = () => setLoggedIn(true);
+    const login = () => {setLoggedIn(true)};
     const logout = () => setLoggedIn(false);
 
     return (

@@ -2,14 +2,19 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
+import {useAuth} from "@/context/AuthContext";
 
 export default function SignupCard() {
         const [username, setUsername] = useState("");
         const [email, setEmail] = useState("");
         const [password, setPassword] = useState("");
         const [confirmPassword, setConfirmPassword] = useState("");
+        const router = useRouter();
+        const { login, isLoggedIn, logout } = useAuth(); // Access the setLoggedIn function from AuthContext
 
-        const handleSignup = async (e: React.FormEvent) => {
+
+    const handleSignup = async (e: React.FormEvent) => {
             e.preventDefault();
 
             // Simulate API call for signup
@@ -19,7 +24,7 @@ export default function SignupCard() {
             }
 
             try {
-                const response = await fetch("/api/signup", {
+                const response = await fetch("/api/users", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -33,7 +38,10 @@ export default function SignupCard() {
 
                 const data = await response.json();
                 console.log("Signup successful:", data);
-                alert("Account created successfully!");
+                if (data.accessToken != null) {
+                    login()
+                    router.push('/home')
+                }
             } catch (error) {
                 console.error("Signup error:", error);
             }

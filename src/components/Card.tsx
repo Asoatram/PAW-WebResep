@@ -24,6 +24,13 @@ function FoodCard({ id, title, description, imageSrc, author, rating }: FoodCard
     router.push(`/recipe/${id}`);
   };
 
+  const truncateDescription = (text, limit) => {
+    if (text.length > limit) {
+      return text.substring(0, limit) + '...';
+    }
+    return text;
+  };
+
   return (
       <button onClick={redirect}>
         <div className="w-[250px] h-[350px] mx-auto bg-white border rounded-lg shadow-md overflow-hidden">
@@ -38,7 +45,7 @@ function FoodCard({ id, title, description, imageSrc, author, rating }: FoodCard
           </div>
           <div className="px-4 pb-4">
             <h3 className="text-xl font-bold text-gray-800">{title}</h3>
-            <p className="mt-2 text-gray-600 text-sm">{description}</p>
+            <p className="mt-2 text-gray-600 text-sm">{truncateDescription(description, 50)}</p>
             <div className="mt-4 flex justify-between items-center">
               <span className="text-sm font-medium text-gray-800">{author}</span>
               <div className="flex items-center">

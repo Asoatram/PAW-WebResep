@@ -1,4 +1,5 @@
-import UserProfile from "@/components/UserProfile"; // Pastikan path benar
+import UserProfile from "@/components/UserProfile";
+import FoodCard from "@/components/Card"; // Pastikan path benar
 
 export default function ProfilePage() {
   const user = {
@@ -9,6 +10,7 @@ export default function ProfilePage() {
   };
 
   return (
+  <>
     <div>
       <UserProfile
         userName={user.name}
@@ -17,5 +19,10 @@ export default function ProfilePage() {
         profileImage={user.profileImage}
       />
     </div>
+    
+    <div>
+
+    </div>
+  </>
   );
 }
