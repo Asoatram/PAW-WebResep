@@ -1,0 +1,39 @@
+/* Styling Sidebar */
+.sidebar {
+  width: 200px;
+  height: 100vh;
+  padding: 16px;
+  border-right: 1px solid #ddd; /* Garis pembatas */
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Spasi antar elemen */
+  box-sizing: border-box;
+}
+
+.sidebar .item {
+  display: flex;
+  align-items: center; /* Menjaga ikon dan teks sejajar */
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  color: #333;
+  text-decoration: none;
+}
+
+.sidebar .item:hover {
+  background-color: #f9f9f9;
+}
+
+.sidebar .icon {
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+}
+
+/* Judul bagian seperti Discover dan Categories */
+.sidebar .title {
+  font-size: 16px;
+  font-weight: bold; /* Tetap bold */
+  margin-bottom: 8px; /* Tambahkan spasi di bawah judul */
+  color: #333; /* Warna teks judul */
+}
