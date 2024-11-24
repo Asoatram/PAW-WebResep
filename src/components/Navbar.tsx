@@ -8,7 +8,7 @@ export default function Navbar(){
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="" style={{background: "#9CDBA6"}}>
+        <nav className="sticky" style={{background: "#9CDBA6"}}>
             <div className="w-full">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
@@ -21,7 +21,7 @@ export default function Navbar(){
 
                     <div className={"space-x-3 justify-center "}>
                         <input placeholder={"Search for Recipe"} className={"border-2 focus:ring-blue-300 focus:border-blue-300 rounded-xl p-2.5 h-1/2 align-middle"}></input>
-                        <button className={"rounded-xl py-2 px-3"} style={{background: "#BCEAD5", textDecorationColor: "black"}}> Search</button>
+                        <button className={"rounded-xl py-2 px-3 hover:bg-green-500 bg-green-300"}> Search</button>
                     </div>
 
                     {/* Menu links */}
