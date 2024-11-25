@@ -20,7 +20,9 @@ export default function ProfilePage() {
       />
     </div>
     
-    <div>
+    <div className={"mt-8"}>
+      <h1 className={"font-medium mr-10"}>Your Recipes</h1>
+      <hr/>
 
     </div>
   </>
