@@ -24,7 +24,6 @@ export default function Main() {
                     throw new Error(`Error: ${res.status}`); // Handle errors
                 }
                 const data = await res.json(); // Parse JSON data
-                console.log(data); // Log fetched data
                 setRecipes(data); // Store the data in state
             } catch (error) {
                 console.error("Failed to fetch recipes:", error); // Log fetch error

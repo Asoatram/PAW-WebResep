@@ -8,6 +8,20 @@ export async function GET(req: Request) {
     await connectDB(); // Connect to the database
     const { searchParams } = new URL(req.url);
     const param = searchParams.get('id')
+    const tag = searchParams.get('tag')
+    const search = searchParams.get('search')
+
+    if (search) {
+        const recipes = await Recipe.find({
+            title: { $regex: new RegExp(search, 'i') } // 'i' for case-insensitive search
+        });
+        return NextResponse.json(recipes, { status: 200 });
+    }
+
+    if(tag){
+        const recipes = await Recipe.find({tags: tag})
+        return NextResponse.json(recipes, {status: 200})
+    }
 
     if(param){
      const recipes = await Recipe.find({_id : param})
