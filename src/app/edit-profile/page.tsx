@@ -72,7 +72,6 @@ export default function EditProfilePage() {
   // Fungsi untuk menyimpan data ke database
   const handleSave = async (updatedData: { userName: string; description: string; profileImage?: string }) => {
     try {
-      // Upload gambar ke Cloudinary jika ada gambar baru
       let profileImageUrl = user.profileImage;
       if (updatedData.profileImage && updatedData.profileImage !== user.profileImage) {
         const uploadResponse = await fetch("/api/sign-image", {
@@ -95,6 +94,7 @@ export default function EditProfilePage() {
         }
       }
 
+      console.log(profileImageUrl)
       // Payload untuk update profile
       const payload = {
         user_id: user.id, // Gunakan ID pengguna yang didapatkan dari token
