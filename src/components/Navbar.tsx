@@ -44,7 +44,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Search Bar */}
-                    <div className={"flex items-center space-x-3"}>
+                    <div className={"relative flex items-center space-x-3 z-5"}>
                         <input
                             onChange={onChange}
                             value={searchText}
@@ -57,13 +57,13 @@ export default function Navbar() {
                         </button>
                         {/* Dropdown */}
                         {searchText && (
-                            <div className="absolute top-full left-100 mt-1 w-80 bg-white border-2 border-gray-300 rounded-xl shadow-md z-10">
+                            <div className="absolute top-full left-0 mt-1 w-80 bg-white border-2 border-gray-300 rounded-xl shadow-md z-5">
                                 {data
                                     .filter((item) => item.title.toLowerCase().startsWith(searchText.toLowerCase())&& item.title.toLowerCase() !== searchText.toLowerCase())
                                     .map((item) => (
                                         <div
                                             key={item.title} // Use id if available, otherwise use title as fallback
-                                            className="p-2 cursor-pointer hover:bg-gray-100"
+                                            className="p-2 cursor-pointer hover:bg-gray-100 z-5"
                                             onClick={() => {
                                                 setSearchText(item.title);
                                                 router.push(`/browse?recipe=${item.title}`)

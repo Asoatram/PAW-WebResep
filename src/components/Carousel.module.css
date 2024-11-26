@@ -1,25 +1,31 @@
 .carousel-container {
     width: 100%;
-    max-width: 800px; /* Adjust as needed */
-    margin: auto;
-}
-
-.carousel-slide {
-    position: relative;
-}
-
-.carousel-image {
+    height: 100%;
+    z-index: 3;
+  }
+  
+  .carousel {
     width: 100%;
-    height: auto;
-    border-radius: 8px; /* Optional: Rounded corners */
-}
+    height: 100%;
+    z-index: 3;
+  }
+  
+  .carousel-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    z-index: 3;  
+    /* Center slide content vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .carousel-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 3;  
 
-.carousel-caption {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    padding: 10px;
-    border-radius: 5px;
-}
+  }

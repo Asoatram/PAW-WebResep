@@ -18,11 +18,11 @@ const Carousel = () => {
     };
 
     return (
-        <div className="relative w-full max-w-10xl mx-auto pb-6">
+        <div className="relative w-full max-w-10xl mx-auto pb-6 z-0">
             {/* Carousel Container */}
             <div className="overflow-hidden">
                 <div
-                    className="flex transition-transform duration-500"
+                    className="flex transition-transform duration-500 z-3"
                     style={{ transform: `translateX(-${currentIndex * 100}%)` }}
                 >
                     {slides.map((slide, index) => (
@@ -30,7 +30,7 @@ const Carousel = () => {
                             key={index}
                             src={slide}
                             alt={`Slide ${index + 1}`}
-                            className="w-full h-[400px] flex-shrink-0"
+                            className="w-full h-[400px] flex-shrink-0 z-3"
                         />
                     ))}
                 </div>
