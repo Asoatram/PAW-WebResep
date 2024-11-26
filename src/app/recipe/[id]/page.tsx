@@ -8,13 +8,14 @@ import { jwtVerify } from "jose";
 
 dotenv.config();
 
-export default function Recipe({ params }) {
+export default function Recipe({ params, isSavedProp}) {
     const { id } = React.use(params); // Mengambil parameter langsung dari props
     const [recipe, setRecipe] = useState(null); // State untuk data resep
     const [error, setError] = useState(null); // State untuk pesan error
     const [comments, setComments] = useState([]); // State untuk komentar
     const [newComment, setNewComment] = useState(''); // State untuk input komentar baru
-    const [isSaved, setIsSaved] = useState(false); // State untuk status saved
+    // const [isSaved, setIsSaved] = useState(false); // State untuk status saved
+    const [isSaved, setIsSaved] = useState(isSavedProp || false);
 
     const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Secret untuk verifikasi JWT
 
