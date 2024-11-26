@@ -1,98 +1,78 @@
-'use client'
+'use client'; // Client-side component
 
-import UserProfile from "@/components/UserProfile";
-import FoodCard from "@/components/Card";
-import {jwtVerify} from "jose";
-import React, {useEffect, useState} from "react"; // Pastikan path benar
+import { useEffect, useState } from 'react';
+import UserProfile from '@/components/UserProfile'; // Pastikan komponen ini sesuai
+import FoodCard from '@/components/Card';           // Pastikan komponen ini sesuai
+import Link from 'next/link';
 
-interface foodCardProps{
-    _id : string,
-  title : string,
-  description : string,
-  image_url : string,
-  author : string,
-  rating : string,
-  difficulty : string,
+interface UserProfileData {
+  name: string;
+  email: string;
+  recipesPosted: number;
+  description: string;
+  profileImage: string;
 }
 
 export default function ProfilePage() {
-
-  const [recipes, setRecipes] = useState<Array<foodCardProps> | never>([]); // State to store user data
-  const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Replace with your actual secret key
-
-  const getUserIdFromToken = async (token:string) => {
-    try {
-      const { payload } = await jwtVerify(token, secret);
-      console.log(payload);
-      return payload.id; // Ensure your JWT token includes 'id' in its payload
-    } catch (error) {
-      console.error("Invalid token:", error);
-      return null;
-    }
-  };
-
-  const getTokenFromCookies = () => {
-    const tokenRow = document.cookie.split("; ").find((row) => row.startsWith("token="));
-    return tokenRow ? tokenRow.split("=")[1] : null; // Extract the token from cookies
-  };
+  const [user, setUser] = useState<UserProfileData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = getTokenFromCookies();
-      if (!token) {
-        console.error("No token found");
-        return;
-      }
-      const userId = await getUserIdFromToken(token);
-      if (!userId) {
-        console.error("Failed to retrieve user ID from token");
-        return;
-      }
-
-      // Fetch user data from your backend using the userId
+    const fetchUserProfile = async () => {
       try {
-        console.log(userId)
-        const response = await fetch(`/api/recipes?profile=${userId}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
+        const res = await fetch('/api/profile', {
+          method: 'GET',
+          credentials: 'include', // Pastikan cookies dikirim
+        });
+
+        if (!res.ok) {
+          throw new Error(`Failed to fetch profile: ${res.statusText}`);
         }
-        const recipes = await response.json();
-        setRecipes(recipes);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+
+        const data = await res.json();
+        setUser(data); // Update state dengan data user
+        console.log(data)
+      } catch (err: any) {
+        setError(err.message); // Tangani error
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchUserData();
+    fetchUserProfile();
   }, []);
-    return (
-    <>
-      <div>
-        <UserProfile
-          userName={"John Doe"}
-          recipesPosted={1}
-          description={"user.description"}
-          profileImage={"user.profileImage"}
-        />
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!user) {
+    return <div>No user profile found.</div>;
+  }
+
+  return (
+    <div>
+      <UserProfile
+        userName={user.name}
+        recipesPosted={user.recipesPosted}
+        description={user.description}
+        profileImage={user.profileImage}
+      />
+
+      <div className="mt-8">
+        <h1 className="font-medium mr-10">Your Recipes</h1>
+        <hr />
       </div>
 
-      <div className={"mt-8"}>
-        <h1 className={"font-medium mr-10"}>Your Recipes</h1>
-        <hr/>
-        <div className="grid grid-cols-4 gap-4 m-2">
-          {recipes.map((recipe:foodCardProps, index:number) => (
-              <FoodCard
-                  id={recipe._id}
-                  key={index}
-                  title={recipe.title}
-                  description={recipe.description}
-                  imageSrc={recipe.image_url}
-                  author={recipe.author}
-                  rating={recipe.difficulty}
-              />
-          ))}
-        </div>
-      </div>
-    </>
-    );
+      {/* Tampilkan tombol edit profil */}
+      <Link href="/edit-profile">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded">Edit Profile</button>
+      </Link>
+    </div>
+  );
 }
