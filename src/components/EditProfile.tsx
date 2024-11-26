@@ -17,7 +17,7 @@ export default function EditProfile({
   const [name, setName] = useState(userName);
   const [desc, setDesc] = useState(description);
   const [image, setImage] = useState(profileImage || "");
-
+  console.log(image)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
