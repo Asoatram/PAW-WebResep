@@ -3,6 +3,7 @@ import SMTPTransport from "nodemailer/lib/smtp-transport";
 import Mail from "nodemailer/lib/mailer";
 
 const transporter = nodemailer.createTransport({
+    service:process.env.EMAIL_SERVICE,
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     secure: false,
@@ -27,7 +28,6 @@ export const sendEmail = async (dto: SendEmailDto) => {
         from: sender,
         to: recipients,
         subject,
-        html: message,
-        text: message,
+        html: message
     })
 }

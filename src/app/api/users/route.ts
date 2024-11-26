@@ -22,14 +22,16 @@ export async function POST(req: NextRequest, res: NextResponse) {
         // Save the user to the database
         await user.save();
 
+        const userRegistered = await User.findOne({username, email}).select('_id username email user_id');
+
         const secret = new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET);
 
-        const accessToken = await new SignJWT({username, email, hashedPassword}).setProtectedHeader({ alg: 'HS256' })
+        const accessToken = await new SignJWT({username, email, hashedPassword, id: userRegistered.user_id}).setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt()
             .setExpirationTime('1h')
             .sign(secret);
         console.log(accessToken);
-        const response = NextResponse.json({message: 'User created successfully', accessToken : accessToken}, {status: 201});
+        const response = NextResponse.json({message: 'User created successfully', accessToken : accessToken, user: userRegistered}, {status: 201});
         response.cookies.set(
             'token', accessToken, {
                 httpOnly: false,
@@ -49,4 +51,3 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 
 }
-

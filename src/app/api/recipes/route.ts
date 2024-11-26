@@ -10,6 +10,13 @@ export async function GET(req: Request) {
     const param = searchParams.get('id')
     const tag = searchParams.get('tag')
     const search = searchParams.get('search')
+    const profile = searchParams.get('profile')
+
+    if(profile){
+        console.log(profile)
+        const recipes = await Recipe.find({user_id : parseInt(profile)})
+        return NextResponse.json(recipes, {status: 200})
+    }
 
     if (search) {
         const recipes = await Recipe.find({
@@ -49,3 +56,4 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Failed to create recipe', details: error }, { status: 500 });
     }
 }
+
