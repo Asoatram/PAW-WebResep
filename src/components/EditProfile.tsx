@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./EditProfile.module.css";
+import { CldUploadWidget } from "next-cloudinary";
 
 interface EditProfileProps {
   userName: string;
@@ -18,10 +19,12 @@ export default function EditProfile({
   const [desc, setDesc] = useState(description);
   const [image, setImage] = useState(profileImage || "");
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setImage(URL.createObjectURL(file)); // Menggunakan URL lokal sebagai contoh
+  const handleImageUpload = (result: any) => {
+    if (result.info && result.info.secure_url) {
+      setImage(result.info.secure_url); // Simpan URL gambar yang berhasil di-upload ke Cloudinary
+      console.log("Uploaded image URL:", result.info.secure_url);
+    } else {
+      console.error("Image upload failed:", result);
     }
   };
 
@@ -53,14 +56,26 @@ export default function EditProfile({
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="profileImage">Profile Image</label>
-        <input
-          type="file"
-          id="profileImage"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className={styles.fileInput}
-        />
-        {image && <img src={image} alt="Preview" className={styles.imagePreview} />}
+        <CldUploadWidget signatureEndpoint="/api/sign-image" onUpload={handleImageUpload}>
+          {({ open }) => (
+            <div>
+              <button
+                type="button"
+                className={styles.fileInput}
+                onClick={() => open()}
+              >
+                Upload Image
+              </button>
+              {image && (
+                <img
+                  src={image}
+                  alt="Preview"
+                  className={styles.imagePreview}
+                />
+              )}
+            </div>
+          )}
+        </CldUploadWidget>
       </div>
       <button type="submit" className={styles.saveButton}>
         Save Changes
