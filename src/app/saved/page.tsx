@@ -1,74 +1,89 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import FoodCard from '@/components/Card';
+import { jwtVerify } from 'jose';
 
-export default function SavedPage() {
-    const [recipes, setRecipes] = useState([]); // State untuk menyimpan resep
-    const [loading, setLoading] = useState(true); // State untuk loading
-    const [error, setError] = useState(null); // State untuk error
+export default function SavedRecipesPage() {
+    const [recipes, setRecipes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Secret untuk verifikasi JWT
+
+    const getTokenFromCookies = () => {
+        const tokenRow = document.cookie.split('; ').find(row => row.startsWith('token='));
+        return tokenRow ? tokenRow.split('=')[1] : null; // Ambil token atau null jika tidak ada
+    };
+
+    // ** Decode JWT untuk mendapatkan user_id **
+    const getUserIdFromToken = async (token) => {
+        try {
+            const decoded = await jwtVerify(token, secret);
+            return decoded.payload.id; // Pastikan JWT memiliki field `id`
+        } catch (error) {
+            console.error('Invalid token:', error);
+            return null; // Kembalikan null jika token tidak valid
+        }
+    };
 
     useEffect(() => {
         const fetchSavedRecipes = async () => {
             try {
-                // Fetch user data untuk mendapatkan savedRecipes
-                const userResponse = await fetch('/api/users'); // Sesuaikan endpoint API
-                const userData = await userResponse.json();
-
-                if (!userData.savedRecipes || userData.savedRecipes.length === 0) {
-                    setRecipes([]); // Jika tidak ada resep tersimpan
-                    setLoading(false);
-                    return;
+                const token = getTokenFromCookies();
+                if (!token) {
+                    throw new Error('User not authenticated');
                 }
 
-                // Fetch detail resep berdasarkan savedRecipes
-                const recipesResponse = await fetch(
-                    `/api/recipes?ids=${userData.savedRecipes.join(',')}` // Mengirimkan array `savedRecipes` sebagai query parameter
-                );
-                const recipesData = await recipesResponse.json();
+                const user_id = await getUserIdFromToken(token);
+                if (!user_id) {
+                    throw new Error('Invalid user ID');
+                }
 
-                setRecipes(recipesData); // Simpan data resep
+                const response = await fetch(`/api/saved-recipes?user_id=${user_id}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch saved recipes: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                setRecipes(data);
                 setLoading(false);
             } catch (err) {
                 console.error('Error fetching saved recipes:', err);
-                setError('Failed to fetch saved recipes.');
+                setError(err.message);
                 setLoading(false);
             }
         };
 
         fetchSavedRecipes();
-    }, []);
+    }, []); // Tidak ada dependensi tambahan
 
     if (loading) {
-        return <p>Loading...</p>; // Tampilan saat loading
+        return <p>Loading...</p>;
     }
 
     if (error) {
-        return <p className="text-red-500">{error}</p>; // Tampilan saat error
+        return <p className="text-red-500">{error}</p>;
     }
 
     if (recipes.length === 0) {
-        return <p>No saved recipes found.</p>; // Tampilan jika tidak ada resep
+        return <p>No saved recipes found.</p>;
     }
 
     return (
         <div>
-            <div>
-                <p>Hello Everyone! Browse your saved recipes</p>
-                <hr />
-                {/* Render fetched recipes */}
-                <div className="grid grid-cols-4 gap-4 m-2">
-                    {recipes.map((recipe, index) => (
-                        <FoodCard
-                            id={recipe._id}
-                            key={index}
-                            title={recipe.title}
-                            description={recipe.description}
-                            imageSrc={recipe.image_url}
-                            author={recipe.author}
-                            rating={recipe.difficulty}
-                        />
-                    ))}
-                </div>
+            <h1>Your Saved Recipes</h1>
+            <div className="grid grid-cols-4 gap-4 m-2">
+                {recipes.map((recipe, index) => (
+                    <FoodCard
+                        id={recipe._id}
+                        key={index}
+                        title={recipe.title}
+                        description={recipe.description}
+                        imageSrc={recipe.image_url}
+                        author={recipe.author}
+                        rating={recipe.difficulty}
+                    />
+                ))}
             </div>
         </div>
     );
