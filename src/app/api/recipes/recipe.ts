@@ -1,6 +1,7 @@
 // src/pages/api/recipes.js
 import connectDB from '../../../lib/mongoose';
 import Recipe from '../../../models/Recipe';
+import User from '../../../models/User';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 // Make the handler async to use await
@@ -23,8 +24,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } catch (error) {
             return Response.json({ error: 'Failed to fetch recipes', details: error });
         }
+    } else if (req.method === 'DELETE') {
+        const { user_id, recipe_id } = req.body;
+
+        try {
+            const user = await User.findOne({ user_id });
+            if (!user) return res.status(404).json({ message: 'User not found' });
+
+            user.savedRecipes = user.savedRecipes.filter(id => id !== recipe_id);
+            await user.save();
+
+            res.status(200).json({ message: 'Recipe unsaved successfully', savedRecipes: user.savedRecipes });
+        } catch (error) {
+            console.error('Error unsaving recipe:', error);
+            res.status(500).json({ message: 'Failed to unsave recipe' });
+        }
     } else {
-        res.setHeader('Allow', ['GET', 'POST']);
+        res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
         res.status(405).end(`Method ${req.method} Not Allowed`);
     }
 }
