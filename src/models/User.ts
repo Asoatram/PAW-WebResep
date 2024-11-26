@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema({
         type: String, // URL to the profile picture
         default: 'defaultProfilePic.jpg',
     },
+    savedRecipes: 
+    {
+        type: [Number], // Array untuk menyimpan ID resep
+        required: true,
+        default: ['0'],    // Inisialisasi sebagai array kosong // Bisa berupa ObjectId atau String
+    },
 }, {collection : 'Users'});
 
     userSchema.pre('save', async function(next) {
