@@ -1,44 +1,67 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper-bundle.css'; // Import Swiper styles
-import './Carousel.module.css'
+import React, { useState } from "react";
 
 const Carousel = () => {
-    const images = [
-        {
-            src: 'https://media.istockphoto.com/id/1457433817/photo/group-of-healthy-food-for-flexitarian-diet.jpg?s=612x612&w=0&k=20&c=v48RE0ZNWpMZOlSp13KdF1yFDmidorO2pZTu2Idmd3M=',
-            alt: 'Delicious Salad',
-            caption: 'Find the right pick',
-        },
-        {
-            src: 'https://res.cloudinary.com/hz3gmuqw6/image/upload/c_fill,q_auto,w_750/f_auto/cincinnati-food-phpfuVz4t',
-            alt: 'Grilled Chicken',
-            caption: 'Healthy and Tasty',
-        },
-        {
-            src: 'https://www.foodiesfeed.com/wp-content/uploads/2023/05/juicy-cheeseburger.jpg',
-            alt: 'Fresh Ingredients',
-            caption: 'Fresh and Organic',
-        },
+    const slides = [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvC1pGhW7_BRwnGuBguLE99tfA0faYflekCA&s",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-NJfsqAVcMSYy9O8d-7f9dQ92Z3A0YNYZwQ&s",
+        "https://images.yourstory.com/cs/7/1da9ec3014cc11e9a1b2b928167b6c62/bowlfoodinside3-1579518185672.png?fm=png&auto=format&blur=500",
     ];
 
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const handlePrev = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === 0 ? slides.length - 1 : prevIndex - 1));
+    };
+
+    const handleNext = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === slides.length - 1 ? 0 : prevIndex + 1));
+    };
+
     return (
-        <div className="carousel-container">
-            <Swiper
-                spaceBetween={30}
-                pagination={{ clickable: true }}
-                navigation
-                loop={true}
+        <div className="relative w-full max-w-4xl mx-auto pb-6">
+            {/* Carousel Container */}
+            <div className="overflow-hidden">
+                <div
+                    className="flex transition-transform duration-500"
+                    style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+                >
+                    {slides.map((slide, index) => (
+                        <img
+                            key={index}
+                            src={slide}
+                            alt={`Slide ${index + 1}`}
+                            className="w-full flex-shrink-0"
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* Navigation Buttons */}
+            <button
+                className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-600"
+                onClick={handlePrev}
             >
-                {images.map((image, index) => (
-                    <SwiperSlide key={index}>
-                        <div className="carousel-slide">
-                            <img src={image.src} alt={image.alt} className="carousel-image" />
-                            <div className="carousel-caption">{image.caption}</div>
-                        </div>
-                    </SwiperSlide>
+                ❮
+            </button>
+            <button
+                className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-600"
+                onClick={handleNext}
+            >
+                ❯
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {slides.map((_, index) => (
+                    <button
+                        key={index}
+                        onClick={() => setCurrentIndex(index)}
+                        className={`w-3 h-3 rounded-full ${
+                            index === currentIndex ? "bg-gray-800" : "bg-gray-400"
+                        }`}
+                    ></button>
                 ))}
-            </Swiper>
+            </div>
         </div>
     );
 };

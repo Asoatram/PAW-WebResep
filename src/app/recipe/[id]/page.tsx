@@ -98,7 +98,7 @@ export default function Recipe({ params }) {
                 'Content-Type': 'application/json',
             },
 
-            body: JSON.stringify({ recipe_id: recipe.recipe_id, comment: newComment, user_id }), // Include userId in the request body
+            body: JSON.stringify({ recipe_id: recipe.recipe_id, comment_text: newComment, user_id, comment_id: 1}), // Include userId in the request body
         })
             .then(res => {
                 if (!res.ok) {

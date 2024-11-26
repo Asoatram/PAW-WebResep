@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
         type: String, // URL to the profile picture
         default: 'defaultProfilePic.jpg',
     },
+
 }, {collection : 'Users'});
 
     userSchema.pre('save', async function(next) {

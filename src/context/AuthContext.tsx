@@ -1,18 +1,23 @@
 "use client"; // Ensure it's a client component
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import User from "@/models/User";
 
 interface AuthContextProps {
     isLoggedIn: boolean;
-    login: () => void;
+    login: (username: string) => void;
     logout: () => void;
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+    username: string;
+    setUser: React.Dispatch<React.SetStateAction<string>>;
+
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoggedIn, setLoggedIn] = useState(false);
+    const [username, setUser] = useState('');
     // Check for the token cookie when the component mounts
     useEffect(() => {
         console.log("test")
@@ -25,11 +30,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     }, []); // Empty dependency array means this runs once on mount
 
-    const login = () => {setLoggedIn(true)};
+    const login = (user: string) => {setLoggedIn(true); console.log(user); setUser(user)};
     const logout = () => setLoggedIn(false);
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn, login, logout, setLoggedIn }}>
+        <AuthContext.Provider value={{ isLoggedIn, login, logout, setLoggedIn, username, setUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -3,7 +3,8 @@
 import React, {useState} from "react";
 import {useAuth } from "@/context/AuthContext"
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Correct useRouter hook
+import { useRouter } from "next/navigation";
+import user from "@/models/User"; // Correct useRouter hook
 
 export default function LoginCard() {
     const { login, isLoggedIn, logout } = useAuth(); // Access the setLoggedIn function from AuthContext
@@ -33,7 +34,8 @@ export default function LoginCard() {
             console.log(data);
             // Assuming the server returns a JWT token
             if (data.accessToken != null) {
-                login()
+                console.log(data.user.username)
+                login(data.user.username)
                 router.push('/home')
             }
         } catch (error) {

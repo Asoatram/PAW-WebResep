@@ -1,9 +1,10 @@
 import {sendEmail} from "@/app/api/utils/mail.utils";
+import {NextRequest, NextResponse} from "next/server";
 
-export async function POST(){
+export async function POST(req: NextRequest, res: NextResponse) {
     const sender = {
-        name : 'My App',
-        address : 'hello@demomailtrap.com'
+        name: 'Feastify | No Reply',
+        address : process.env.EMAIL_USER
     }
 
     const recipients = [{
@@ -15,88 +16,63 @@ export async function POST(){
         const result = await sendEmail({
             sender,
             recipients,
-            subject: 'Email Test',
-            message: '<head>\n' +
-                '    <meta charset="UTF-8">\n' +
-                '    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
-                '    <title>Feastify - Verify Your Account</title>\n' +
-                '<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> \n' +
-                '    <style>\n' +
-                '        body {\n' +
-                '            margin: 0;\n' +
-                '            padding: 0;\n' +
-                '            font-family: "Poppins", serif;\n' +
-                '            background-color: #e6f7f3;\n' +
-                '            display: flex;\n' +
-                '            justify-content: center;\n' +
-                '            align-items: center;\n' +
-                '            height: 100vh;\n' +
-                '        }\n' +
-                '\n' +
-                '        .container {\n' +
-                '            background-color: white;\n' +
-                '            border-radius: 10px;\n' +
-                '            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);\n' +
-                '            padding: 2rem;\n' +
-                '            max-width: 400px;\n' +
-                '            text-align: center;\n' +
-                '        }\n' +
-                '\n' +
-                '        .logo {\n' +
-                '            width: 80px;\n' +
-                '            margin-bottom: 1rem;\n' +
-                '        }\n' +
-                '\n' +
-                '        h1 {\n' +
-                '            font-size: 1.5rem;\n' +
-                '            margin: 0;\n' +
-                '        }\n' +
-                '\n' +
-                '        p {\n' +
-                '            font-size: 1rem;\n' +
-                '            color: #555;\n' +
-                '            margin: 0.5rem 0;\n' +
-                '        }\n' +
-                '\n' +
-                '        .button {\n' +
-                '            background-color: #79c6ae;\n' +
-                '            color: white;\n' +
-                '            border: none;\n' +
-                '            font-family: "Poppins", serif;\n' +
-                '            padding: 0.75rem 1.5rem;\n' +
-                '            border-radius: 5px;\n' +
-                '            font-size: 1rem;\n' +
-                '            cursor: pointer;\n' +
-                '            margin-top: 1rem;\n' +
-                '            transition: background-color 0.3s;\n' +
-                '        }\n' +
-                '\n' +
-                '        .button:hover {\n' +
-                '            background-color: #5fa48d;\n' +
-                '        }\n' +
-                '\n' +
-                '        .small-text {\n' +
-                '            color: #999;\n' +
-                '            font-size: 0.875rem;\n' +
-                '            margin-top: 0.5rem;\n' +
-                '        }\n' +
-                '    </style>\n' +
-                '</head>\n' +
-                '\n' +
-                '<body>\n' +
-                '    <div class="container">\n' +
-                '        <img src="https://www.svgrepo.com/show/530384/food.svg" alt="Feastify Logo" class="logo">\n' +
-                '        <h1>Feastify</h1>\n' +
-                '        <p>Click the button to verify your account</p>\n' +
-                '        <p class="small-text">This isn’t you?</p>\n' +
-                '        <p>Explore Flavors, One Recipe at a Time</p>\n' +
-                '        <button class="button">Verify</button>\n' +
-                '    </div>\n' +
-                '</body>',
-        })
-        return Response.json({
-            accepted: result.accepted,
-        })
+            subject: "Verify Your Account",
+            message: `
+        <!DOCTYPE html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Feastify - Verify Your Account</title>
+        </head>
+        <div style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #e6f7f3; width: 100%; text-align: center;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #e6f7f3; padding: 20px 0;">
+                <tr>
+                    <td align="center">
+                        <table cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; max-width: 400px; width: 100%; padding: 20px; text-align: center;">
+                            <tr>
+                                <td>
+                                    <!-- Replace with your logo URL -->
+                                    <img src="https://res.cloudinary.com/ddrnhafts/image/upload/v1732552295/a5o9bhnjw8cx424ygmqa.png" alt="Feastify Logo" style="width: 80px; height: auto; margin-bottom: 20px;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h1 style="font-size: 20px; color: #333333; margin: 0 0 10px;">Feastify</h1>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p style="font-size: 14px; color: #555555; margin: 10px 0;">Click the button below to verify your account.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="http://localhost:3000/verify/${_id}" style="display: inline-block; background-color: #79c6ae; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: bold; padding: 10px 20px; border-radius: 5px; margin-top: 20px;">Verify</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p style="font-size: 12px; color: #999999; margin: 20px 0 0;">This isn’t you?</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p style="font-size: 14px; color: #555555; margin: 10px 0;">Explore Flavors, One Recipe at a Time.</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </html>
+    `,
+        });
+
+
+
+        return Response.json({message: "Email send"}, {status: 200});
+
     } catch (error) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
