@@ -36,8 +36,12 @@ export async function GET(req: Request) {
 
                 return NextResponse.json(comments, {status: 200}); // Return the aggregated comments
             } catch (error  ) {
-                console.error('Error fetching comments:', error);
-                return NextResponse.json(error.message);
+                if (error instanceof Error ) {
+                    console.error('Error fetching comments:', error);
+                    return NextResponse.json(error.message);
+                } else {
+                    console.error('Unknown Error')
+                }
             }
     } else {
         try {
@@ -59,8 +63,13 @@ export async function POST(req: Request){
         await newComment.save();
         return NextResponse.json({message: "Comment successfully created"}, {status: 200});
     } catch (e){
-        console.error(e);
-        return NextResponse.json({"error": e.message}, {status: 500});
+        if(e instanceof Error) {
+            console.error(e);
+            return NextResponse.json({"error": e.message}, {status: 500});
+        } else {
+            console.error("Unknown Error occured")
+            return NextResponse.json({"error": "Failed to fetch recipes"}, {status: 500});
+        }
     }
 
 }

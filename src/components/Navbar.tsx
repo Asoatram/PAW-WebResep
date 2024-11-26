@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext"; // Correct useRouter hook
@@ -10,6 +10,8 @@ export default function Navbar() {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [searchText, setSearchText] = useState('');
+
+
 
     const searchClick = () => {
         router.push(`/browse?recipe=${searchText}`);

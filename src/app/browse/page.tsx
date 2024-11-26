@@ -6,31 +6,28 @@ import FoodCard from "@/components/Card";
 import { useSearchParams } from 'next/navigation';
 import recipe from "@/models/Recipe"; // Import useSearchParams
 
-export default function BrowsePage() {
+export default function BrowsePage(req: Request) {
     const searchParams = useSearchParams(); // Get search parameters
-    const search = searchParams.get('recipe'); // Get the 'recipe' parameter from the URL
-    const [recipes, setRecipes] = useState([]); // Store fetched recipes
+    const search = searchParams.get('recipe'); // Get the 'recipe' parameter
+    const [recipes, setRecipes] = useState([]);
+
+    const fetchSearchRecipes = async () => {
+        try {
+            const response = await fetch(`/api/recipes?search=${search}`); // Replace with your API endpoint
+            const data = await response.json();
+            setRecipes(data);
+        } catch (error) {
+            console.error('Error fetching recipes:', error);
+        }
+    };
+
 
     useEffect(() => {
-        // Fetch recipes based on the search query from the URL
-        const fetchSearchRecipes = async () => {
-            try {
-                let url = '/api/recipes'; // Default to fetching all recipes
+        // Fetch vegan recipes from your API
 
-                if (search && search.trim() !== '') {
-                    url = `/api/recipes?search=${encodeURIComponent(search)}`; // Fetch recipes based on search query
-                }
 
-                const response = await fetch(url);
-                const data = await response.json();
-                setRecipes(data); // Set the fetched data in state
-            } catch (error) {
-                console.error('Error fetching recipes:', error);
-            }
-        };
-
-        fetchSearchRecipes(); // Call the fetch function when the component mounts or search changes
-    }, [search]); // Re-run this effect whenever the `search` value changes
+        fetchSearchRecipes();
+    }, [search]);
 
     return (
         <div>

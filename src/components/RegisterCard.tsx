@@ -11,7 +11,7 @@ export default function SignupCard() {
         const [password, setPassword] = useState("");
         const [confirmPassword, setConfirmPassword] = useState("");
         const router = useRouter();
-        const { login, isLoggedIn, logout } = useAuth(); // Access the setLoggedIn function from AuthContext
+        const { login} = useAuth(); // Access the setLoggedIn function from AuthContext
 
 
     const handleSignup = async (e: React.FormEvent) => {
@@ -48,7 +48,7 @@ export default function SignupCard() {
 
                 console.log("Signup successful:", data);
                 if (data.accessToken != null) {
-                    login()
+                    login(data.user.username)
                     router.push('/home')
                 }
             } catch (error) {

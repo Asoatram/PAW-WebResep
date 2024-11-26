@@ -3,6 +3,7 @@ import connectDB from '../../../lib/mongoose';
 import Recipe from '../../../models/Recipe';
 import User from '../../../models/User';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import {parseIngredients} from "@/app/api/utils/recipe.utils";
 
 // Make the handler async to use await
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

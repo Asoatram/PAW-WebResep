@@ -5,14 +5,14 @@ import User from "@/models/User";
 import bcrypt from "bcrypt";
 
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     await connectDB(); // Connect to the database
 
 
     try {
         const {username, email, password} = await req.json(); // Parse the JSON body
 
-        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUND));
+        const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT_ROUND as string));
         const user = new User({
             username,
             email,
@@ -44,9 +44,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         // Return a success response
         return response;
-    } catch (e: Error) {
-        console.error('Error creating user:', e);
-        return NextResponse.json({message: 'Error creating user', error: e.message}, {status: 500});
+    } catch (e) {
+        if(e instanceof Error) {
+            console.error('Error creating user:', e);
+            return NextResponse.json({message: 'Error creating user', error: e.message}, {status: 500});
+        } else {
+            console.error("Unknown error occured");
+            return NextResponse.json({message: 'Error creating user'}, {status: 500})
+        }
     }
 
 
