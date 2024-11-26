@@ -6,25 +6,31 @@ import FoodCard from "@/components/Card";
 import { useSearchParams } from 'next/navigation';
 import recipe from "@/models/Recipe"; // Import useSearchParams
 
-export default function BrowsePage(req: Request) {
+export default function BrowsePage() {
     const searchParams = useSearchParams(); // Get search parameters
-    const search = searchParams.get('recipe'); // Get the 'recipe' parameter
-    const [recipes, setRecipes] = useState([]);
+    const search = searchParams.get('recipe'); // Get the 'recipe' parameter from the URL
+    const [recipes, setRecipes] = useState([]); // Store fetched recipes
 
     useEffect(() => {
-        // Fetch vegan recipes from your API
+        // Fetch recipes based on the search query from the URL
         const fetchSearchRecipes = async () => {
             try {
-                const response = await fetch(`/api/recipes?search=${search}`); // Replace with your API endpoint
+                let url = '/api/recipes'; // Default to fetching all recipes
+
+                if (search && search.trim() !== '') {
+                    url = `/api/recipes?search=${encodeURIComponent(search)}`; // Fetch recipes based on search query
+                }
+
+                const response = await fetch(url);
                 const data = await response.json();
-                setRecipes(data);
+                setRecipes(data); // Set the fetched data in state
             } catch (error) {
-                console.error('Error fetching vegan recipes:', error);
+                console.error('Error fetching recipes:', error);
             }
         };
 
-        fetchSearchRecipes();
-    }, []);
+        fetchSearchRecipes(); // Call the fetch function when the component mounts or search changes
+    }, [search]); // Re-run this effect whenever the `search` value changes
 
     return (
         <div>
