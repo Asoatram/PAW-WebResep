@@ -2,65 +2,119 @@ import connectDB from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 import Comment from "@/models/Comment";
 
-export async function GET(req: Request) {
-    await connectDB(); // Connect to the database
-    const { searchParams } = new URL(req.url);
-    const param = searchParams.get('recipe_id');
-
-    if (param) {
-            try {
-                const comments = await Comment.aggregate([
-                    {
-                        $match: { recipe_id: Number(param) } // Match comments for the specific recipe
-                    },
-                    {
-                        $lookup: {
-                            from: 'Users', // Ensure this matches your Users collection name
-                            localField: 'user_id',
-                            foreignField: 'user_id',
-                            as: 'user_info'
-                        }
-                    },
-                    {
-                        $unwind: '$user_info'
-                    },
-                    {
-                        $project: {
-                            comment_text: 1,
-                            username: '$user_info.username',
-                            rating: 1,
-                            created_at: 1
-                        }
-                    }
-                ]);
-
-                return NextResponse.json(comments, {status: 200}); // Return the aggregated comments
-            } catch (error  ) {
-                console.error('Error fetching comments:', error);
-                return NextResponse.json(error.message);
-            }
-    } else {
-        try {
-            const comments = await Comment.find({});
-            return NextResponse.json(comments, { status: 200 });
-        } catch (error) {
-            return NextResponse.json({ error: 'Failed to fetch comments', details: error }, { status: 500 });
-        }
+// Connect to the database
+async function connectToDatabase() {
+    try {
+        await connectDB();
+        console.log("Database connected successfully");
+    } catch (error: any) {
+        console.error("Database connection failed:", error.message);
+        throw new Error("Database connection error");
     }
 }
 
-export async function POST(req: Request){
-    await connectDB();
-    try{
-        const body = await req.json();
-        console.log(body)
+// GET handler: Fetch comments
+export async function GET(req: Request) {
+    await connectToDatabase();
 
-        const newComment = new Comment(body);
-        await newComment.save();
-        return NextResponse.json({message: "Comment successfully created"}, {status: 200});
-    } catch (e){
-        console.error(e);
-        return NextResponse.json({"error": e.message}, {status: 500});
+    const { searchParams } = new URL(req.url);
+    const recipeIdParam = searchParams.get("recipe_id");
+
+    try {
+        if (recipeIdParam) {
+            const recipeId = Number(recipeIdParam);
+            if (isNaN(recipeId)) {
+                return NextResponse.json(
+                    { error: "Invalid recipe_id" },
+                    { status: 400 }
+                );
+            }
+
+            // Fetch comments for a specific recipe
+            const comments = await Comment.aggregate([
+                {
+                    $match: { recipe_id: recipeId },
+                },
+                {
+                    $lookup: {
+                        from: "Users",
+                        localField: "user_id",
+                        foreignField: "user_id",
+                        as: "user_info",
+                    },
+                },
+                {
+                    $unwind: "$user_info",
+                },
+                {
+                    $project: {
+                        comment_text: 1,
+                        username: "$user_info.username",
+                        rating: 1,
+                        created_at: 1,
+                    },
+                },
+            ]);
+
+            return NextResponse.json(comments, { status: 200 });
+        } else {
+            // Fetch all comments if recipe_id is not provided
+            const comments = await Comment.find({});
+            return NextResponse.json(comments, { status: 200 });
+        }
+    } catch (error: any) {
+        console.error("Error fetching comments:", error.message, error.stack);
+        return NextResponse.json(
+            { error: "Failed to fetch comments", details: error.message },
+            { status: 500 }
+        );
     }
+}
 
+// POST handler: Create a new comment
+export async function POST(req: Request) {
+    await connectToDatabase();
+
+    try {
+        const body = await req.json();
+        console.log("Received request body:", body);
+
+        const { recipe_id, user_id, comment_text, rating } = body;
+
+        // Validate required fields
+        if (!recipe_id || !user_id || !comment_text) {
+            console.error("Missing required fields:", { recipe_id, user_id, comment_text });
+            return NextResponse.json(
+                {
+                    error: "recipe_id, user_id, and comment_text are required",
+                },
+                { status: 400 }
+            );
+        }
+
+        // Create a new comment
+        const newComment = new Comment({
+            comment_id: Date.now(), // Generate a unique ID for the comment
+            recipe_id,
+            user_id,
+            comment_text,
+            rating: rating || 0, // Default rating to 0 if not provided
+            created_at: new Date(),
+        });
+
+        console.log("Saving comment:", newComment);
+
+        await newComment.save();
+
+        return NextResponse.json(
+            { message: "Comment successfully created" },
+            { status: 200 }
+        );
+    } catch (error: any) {
+        console.error("Error creating comment:", error.message, error.stack);
+        return NextResponse.json(
+            { error: error.message || "Failed to create comment" },
+            { status: 500 }
+        );
+    }
 }
