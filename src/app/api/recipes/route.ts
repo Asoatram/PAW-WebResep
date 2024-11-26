@@ -56,3 +56,4 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Failed to create recipe', details: error }, { status: 500 });
     }
 }
+

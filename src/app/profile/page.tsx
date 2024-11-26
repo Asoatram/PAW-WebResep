@@ -10,10 +10,10 @@ export default function ProfilePage() {
   const [recipes, setRecipes] = useState([]); // State to store user data
   const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Replace with your actual secret key
 
-  const getUserIdFromToken = async (token) => {
+  const getUserIdFromToken = async (token:string) => {
     try {
       const { payload } = await jwtVerify(token, secret);
-
+      console.log(payload);
       return payload.id; // Ensure your JWT token includes 'id' in its payload
     } catch (error) {
       console.error("Invalid token:", error);
@@ -22,9 +22,7 @@ export default function ProfilePage() {
   };
 
   const getTokenFromCookies = () => {
-    const tokenRow = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("token="));
+    const tokenRow = document.cookie.split("; ").find((row) => row.startsWith("token="));
     return tokenRow ? tokenRow.split("=")[1] : null; // Extract the token from cookies
   };
 
@@ -35,7 +33,6 @@ export default function ProfilePage() {
         console.error("No token found");
         return;
       }
-
       const userId = await getUserIdFromToken(token);
       if (!userId) {
         console.error("Failed to retrieve user ID from token");
