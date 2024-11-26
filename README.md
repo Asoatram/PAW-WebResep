@@ -31,6 +31,11 @@ Feastify bertujuan untuk mempermudah hidup sehari-hari dengan memberikan inspira
 - **Deployment**: Vercel, Cloudinary (untuk penyimpanan gambar)
 - **Version Control**: Git, GitHub
 
+## **Link Video, Presentasi, dan Website**
+- **Link Video**: https://drive.google.com/file/d/1dBGbvT-DGnG0xQ-0htsRbmPDBchGOkh_/view?usp=sharing
+- **Link Presentasi**: https://www.canva.com/design/DAGXlwGedWY/HR62EWkLDGb-DfJGbUfw2g/edit
+- **Link Website**: https://paw-web-resep.vercel.app/ 
+
 ---
 
 ## Getting Started
