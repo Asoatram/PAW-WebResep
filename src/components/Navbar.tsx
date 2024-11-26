@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext"; // Correct useRouter hook
@@ -20,6 +20,8 @@ export default function Navbar() {
         const data = await response.json();
         setData(data);
     };
+
+
 
     const searchClick = () => {
         router.push(`/browse?recipe=${searchText}`);

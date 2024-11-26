@@ -57,10 +57,6 @@ export async function GET(req: Request) {
             ]);
 
             return NextResponse.json(comments, { status: 200 });
-        } else {
-            // Fetch all comments if recipe_id is not provided
-            const comments = await Comment.find({});
-            return NextResponse.json(comments, { status: 200 });
         }
     } catch (error: any) {
         console.error("Error fetching comments:", error.message, error.stack);
@@ -106,15 +102,14 @@ export async function POST(req: Request) {
 
         await newComment.save();
 
-        return NextResponse.json(
-            { message: "Comment successfully created" },
-            { status: 200 }
-        );
-    } catch (error: any) {
-        console.error("Error creating comment:", error.message, error.stack);
-        return NextResponse.json(
-            { error: error.message || "Failed to create comment" },
-            { status: 500 }
-        );
+        return NextResponse.json({message: "Comment successfully created"}, {status: 200});
+    } catch (e){
+        if(e instanceof Error) {
+            console.error(e);
+            return NextResponse.json({"error": e.message}, {status: 500});
+        } else {
+            console.error("Unknown Error occured")
+            return NextResponse.json({"error": "Failed to fetch recipes"}, {status: 500});
+        }
     }
-}
+
