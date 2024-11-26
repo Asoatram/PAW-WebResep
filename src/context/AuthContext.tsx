@@ -19,16 +19,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoggedIn, setLoggedIn] = useState(false);
     const [username, setUser] = useState('');
     // Check for the token cookie when the component mounts
-    const getTokenFromCookies = ():string => {
+    const getTokenFromCookies = ():string | null=> {
         const tokenRow = document.cookie.split('; ').find(row => row.startsWith('token='));
-        return tokenRow ? tokenRow.split('=')[1] : "Not Found";
+        return tokenRow ? tokenRow.split('=')[1] : null;
     };
 
     useEffect(() => {
         console.log("test")
         const token = getTokenFromCookies();
         console.log("token", token);
-        if (token[0] != '' && token.length > 0) {
+        if (token) {
             setLoggedIn(true); // Set to true if token exists
         } else if (token == null) {
             setLoggedIn(false); // Set to false if token does not exist
