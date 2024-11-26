@@ -73,26 +73,7 @@ export default function EditProfilePage() {
   const handleSave = async (updatedData: { userName: string; description: string; profileImage?: string }) => {
     try {
       let profileImageUrl = user.profileImage;
-      if (updatedData.profileImage && updatedData.profileImage !== user.profileImage) {
-        const uploadResponse = await fetch("/api/sign-image", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            file: updatedData.profileImage, // Base64 atau URL file
-          }),
-        });
 
-        if (uploadResponse.ok) {
-          const uploadData = await uploadResponse.json();
-          profileImageUrl = uploadData.secure_url; // URL gambar dari Cloudinary
-        } else {
-          const error = await uploadResponse.json();
-          alert(`Failed to upload image: ${error.error}`);
-          return;
-        }
-      }
 
       console.log(profileImageUrl)
       // Payload untuk update profile
