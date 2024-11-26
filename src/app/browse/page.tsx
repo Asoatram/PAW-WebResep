@@ -10,6 +10,7 @@ export default function BrowsePage(req: Request) {
     const searchParams = useSearchParams(); // Get search parameters
     const search = searchParams.get('recipe'); // Get the 'recipe' parameter
     const [recipes, setRecipes] = useState([]);
+    const [searchState, setSearchState] = useState(search);
 
     const fetchSearchRecipes = async () => {
         try {
@@ -27,7 +28,7 @@ export default function BrowsePage(req: Request) {
 
 
         fetchSearchRecipes();
-    }, [search]);
+    }, []);
 
     return (
         <div>

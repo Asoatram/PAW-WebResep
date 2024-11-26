@@ -9,6 +9,7 @@ export default function SavedRecipesPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Secret untuk verifikasi JWT
+    // const [isSaved, setIsSaved] = useState(isSavedProp || false);
 
     const getTokenFromCookies = () => {
         const tokenRow = document.cookie.split('; ').find(row => row.startsWith('token='));
@@ -45,7 +46,13 @@ export default function SavedRecipesPage() {
                 }
 
                 const data = await response.json();
-                setRecipes(data);
+
+                const recipesWithSavedStatus = data.map(recipe => ({
+                    ...recipe,
+                    isSaved: true, 
+                }));
+                
+                setRecipes(recipesWithSavedStatus);
                 setLoading(false);
             } catch (err) {
                 console.error('Error fetching saved recipes:', err);
@@ -82,6 +89,7 @@ export default function SavedRecipesPage() {
                         imageSrc={recipe.image_url}
                         author={recipe.author}
                         rating={recipe.difficulty}
+                        isSavedProp={recipe.isSaved} // Pass isSaved as a prop
                     />
                 ))}
             </div>
