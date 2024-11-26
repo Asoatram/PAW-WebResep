@@ -4,118 +4,189 @@ import Spinner from "@/components/Spinner";
 import CommentBox from "@/components/CommentBox";
 
 import dotenv from 'dotenv';
-
-
-import {jwtVerify} from "jose";
+import { jwtVerify } from "jose";
 
 dotenv.config();
-export default function Recipe({ params }) {
-    const { id } = React.use(params); // Unwrap params directly
-    const [recipe, setRecipe] = useState(null); // State to hold recipe data
-    const [error, setError] = useState(null); // State to hold error messages
-    const [comments, setComments] = useState([]); // State to hold comments
-    const [newComment, setNewComment] = useState(''); // State for new comment input
-    const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Use NEXT_PUBLIC_ prefix
 
-    useEffect(() => {
-        const fetchRecipeAndComments = async () => {
-            if (!id) return;
+export default function Recipe({ params, isSavedProp}) {
+    const { id } = React.use(params); // Mengambil parameter langsung dari props
+    const [recipe, setRecipe] = useState(null); // State untuk data resep
+    const [error, setError] = useState(null); // State untuk pesan error
+    const [comments, setComments] = useState([]); // State untuk komentar
+    const [newComment, setNewComment] = useState(''); // State untuk input komentar baru
+    // const [isSaved, setIsSaved] = useState(false); // State untuk status saved
+    const [isSaved, setIsSaved] = useState(isSavedProp || false);
 
-            try {
-                // Fetch the recipe data
-                const recipeRes = await fetch(`http://localhost:3000/api/recipes?id=${id}`);
-                if (!recipeRes.ok) {
-                    throw new Error("Failed to fetch recipe data");
-                }
-                const recipeData = await recipeRes.json();
+    const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Secret untuk verifikasi JWT
 
-                if (recipeData.length === 0) {
-                    setError("Recipe not found");
-                    return;
-                }
+    // ** Ambil token dari cookies **
+    const getTokenFromCookies = () => {
+        const tokenRow = document.cookie.split('; ').find(row => row.startsWith('token='));
+        return tokenRow ? tokenRow.split('=')[1] : null; // Ambil token atau null jika tidak ada
+    };
 
-                setRecipe(recipeData[0]);
-
-                // Fetch comments for the recipe
-                const commentsRes = await fetch(`http://localhost:3000/api/comments?recipe_id=${recipeData[0].recipe_id}`);
-                if (!commentsRes.ok) {
-                    throw new Error("Failed to fetch comments");
-                }
-                const commentsData = await commentsRes.json();
-                setComments(commentsData);
-
-            } catch (err) {
-                console.error("Error fetching recipe or comments:", err);
-                setError(err.message || "Failed to fetch recipe or comments");
-            }
-        };
-
-        fetchRecipeAndComments();
-    }, [id]);
-
-    // Handle loading and error states
-    if (error) {
-        return <div className="text-red-500">{error}</div>;
-    }
-
-    if (!recipe) {
-        return <Spinner />; // Show loading state
-    }
-
-    // Function to decode the JWT and extract user_id
+    // ** Decode JWT untuk mendapatkan user_id **
     const getUserIdFromToken = async (token) => {
         try {
             const decoded = await jwtVerify(token, secret);
-            return decoded.payload.id; // Ensure your token has an 'id' field
+            return decoded.payload.id; // Pastikan JWT memiliki field `id`
         } catch (error) {
             console.error('Invalid token:', error);
-            return null; // Return null if token is invalid
+            return null; // Kembalikan null jika token tidak valid
         }
     };
 
-    const getTokenFromCookies = () => {
-        const tokenRow = document.cookie.split('; ').find(row => row.startsWith('token='));
-        return tokenRow ? tokenRow.split('=')[1] : null; // Return the token or null if not found
-    };
+    // ** Ambil data recipe dan komentar **
+    useEffect(() => {
+        if (id) {
+            // Fetch recipe data
+            fetch(`http://localhost:3000/api/recipes?id=${id}`)
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return res.json(); // Return the promise
+                })
+                .then(data => {
+                    if (data.length > 0) {
+                        setRecipe(data[0]); // Set the recipe data
+                        // Fetch comments for the recipe
+                        return fetch(`http://localhost:3000/api/comments?recipe_id=${data[0].recipe_id}`);
+                    } else {
+                        setError('Recipe not found');
+                    }
+                })
+                .then(res => {
+                    if (res && res.ok) {
+                        return res.json(); // Return the promise
+                    } else {
+                        throw new Error('Failed to fetch comments');
+                    }
+                })
+                .then(data => {
+                    if (data) {
+                        setComments(data); // Set the comments data
+                    }
+                })
+                .catch(err => {
+                    console.error('Fetch error:', err);
+                    setError('Failed to fetch recipe or comments');
+                });
+        }
+    }, [id]);
 
-    // Handle comment submission
+    const checkSavedStatus = async (recipeId) => {
+        const token = getTokenFromCookies();
+        const userId = await getUserIdFromToken(token);
+    
+        if (!userId) return;
+    
+        try {
+            const res = await fetch(`http://localhost:3000/api/save-status?user_id=${userId}&recipe_id=${recipeId}`);
+            const { isSaved } = await res.json();
+            console.log(`Initial isSaved: ${isSaved}`); // Debugging
+            setIsSaved(isSaved);
+        } catch (error) {
+            console.error('Error checking saved status:', error);
+        }
+    };
+    
+    
+    
+
+    // ** Handle toggle save/unsave **
+    const handleSaveToggle = async () => {
+        try {
+            const token = getTokenFromCookies();
+            if (!token) {
+                console.error('Token not found');
+                return;
+            }
+    
+            const userId = await getUserIdFromToken(token);
+            if (!userId) {
+                console.error('User ID not found');
+                return;
+            }
+    
+            console.log('Current recipe ID:', recipe.recipe_id);
+            console.log('Current isSaved state:', isSaved);
+    
+            const url = `http://localhost:3000/api/saved`;
+            const method = isSaved ? 'DELETE' : 'POST';
+    
+            console.log('Making API call with method:', method);
+    
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recipe_id: recipe.recipe_id, user_id: userId }),
+            });
+    
+            if (!res.ok) {
+                const errorData = await res.json();
+                console.error('API error:', errorData);
+                throw new Error('Failed to update saved status');
+            }
+
+            setIsSaved(prev => !prev); // Toggle state isSaved
+            console.log('Saved state toggled successfully');
+        } catch (error) {
+            console.error('Error in handleSaveToggle:', error);
+        }
+    };
+    
+    
+    
+    
+    
+
+    // ** Handle komentar baru **
     const handleCommentSubmit = async (newComment) => {
         const token = getTokenFromCookies();
-        const user_id = await getUserIdFromToken(token); // Extract user_id from the token
-        console.log(user_id);
+        const userId = await getUserIdFromToken(token);
 
-        if (!user_id) {
+        if (!userId) {
             console.error('User not authenticated');
-            return; // Exit if user is not authenticated
+            return;
         }
 
-        // Post new comment to the API
-        fetch(`http://localhost:3000/api/comments`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-
-            body: JSON.stringify({ recipe_id: recipe.recipe_id, comment_text: newComment, user_id, comment_id: 1}), // Include userId in the request body
-        })
-            .then(res => {
-                if (!res.ok) {
-                    throw new Error('Failed to post comment');
-                }
-                return res.json();
-            })
-            .then(data => {
-                setComments([...comments, data]); // Assuming the API returns the new comment
-                setNewComment(''); // Clear the input after submission
-            })
-            .catch(err => {
-                console.error('Error posting comment:', err);
+        try {
+            const res = await fetch(`http://localhost:3000/api/comments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recipe_id: recipe.recipe_id, comment: newComment, user_id: userId }),
             });
+            if (!res.ok) throw new Error('Failed to post comment');
+
+            const data = await res.json();
+            setComments([...comments, data]); // Tambahkan komentar baru
+            setNewComment(''); // Reset input komentar
+        } catch (error) {
+            console.error('Error posting comment:', error);
+        }
     };
+
+    // ** Handle loading atau error state **
+    if (error) return <div className="text-red-500">{error}</div>;
+    if (!recipe) return <Spinner />;
 
     return (
         <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-            <h1 className="text-3xl font-bold mb-4">{recipe.title}</h1>
+            <div className="flex items-center justify-between mb-4">
+                <h1 className="text-3xl font-bold">{recipe.title}</h1>
+                <button
+                    onClick={handleSaveToggle}
+                    className="ml-4"
+                    aria-label="Save Recipe"
+                >
+                    {isSaved ? (
+                        <img src="/saved_icon.svg" alt="Saved Icon" className="w-6 h-6 text-red-500" />
+                    ) : (
+                        <img src="/save_icon.svg" alt="Save Icon" className="w-6 h-6 text-gray-500" />
+                    )}
+                </button>
+            </div>
             <div className="w-full h-64 bg-gray-300 flex items-center justify-center text-2xl text-gray-600 mb-4">
                 <img src={recipe.image_url} alt={recipe.title} className="w-full h-full object-cover" />
             </div>

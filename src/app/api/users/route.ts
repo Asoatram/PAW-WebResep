@@ -1,3 +1,5 @@
+'use client'
+
 import {SignJWT} from 'jose';
 import {NextRequest, NextResponse} from "next/server";
 import connectDB from "@/lib/mongoose";
@@ -51,4 +53,3 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 
 }
-
