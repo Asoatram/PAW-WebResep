@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styles from "./EditProfile.module.css";
-import { CldUploadWidget } from "next-cloudinary";
 
 interface EditProfileProps {
   userName: string;
@@ -19,18 +18,10 @@ export default function EditProfile({
   const [desc, setDesc] = useState(description);
   const [image, setImage] = useState(profileImage || "");
 
-  const handleImageUpload = (result: any) => {
-    if (result.info && result.info.secure_url) {
-      setImage(result.info.secure_url); // Simpan URL gambar yang berhasil di-upload ke Cloudinary
-      console.log("Uploaded image URL:", result.info.secure_url);
-    } else {
-      console.error("Image upload failed:", result);
-    }
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ userName: name, description: desc, profilePicture: image });
+    onSave({ userName: name, description: desc, profileImage: image });
   };
 
   return (
