@@ -19,7 +19,8 @@
     "nodemailer": "^6.9.16",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
-    "swiper": "^11.1.15"
+    "swiper": "^11.1.15",
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
