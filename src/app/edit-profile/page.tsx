@@ -74,14 +74,12 @@ export default function EditProfilePage() {
     try {
       let profileImageUrl = user.profileImage;
 
-
-      console.log(profileImageUrl)
       // Payload untuk update profile
       const payload = {
         user_id: user.id, // Gunakan ID pengguna yang didapatkan dari token
         userName: updatedData.userName,
         description: updatedData.description,
-        profileImage: profileImageUrl,
+        profileImage: updatedData.profileImage,
       };
 
       const response = await fetch("/api/users/update-profile", {
