@@ -1,4 +1,3 @@
-'use client'
 
 import {SignJWT} from 'jose';
 import {NextRequest, NextResponse} from "next/server";

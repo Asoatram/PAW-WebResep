@@ -1,6 +1,7 @@
 import styles from "./UserProfile.module.css";
 import EditProfile from "@/components/EditProfile";
 import Link from "next/link";
+import {useEffect, useState} from "react";
 
 interface UserProfileProps {
   userName: string;
@@ -15,6 +16,10 @@ export default function UserProfile({
   description,
   profileImage,
 }: UserProfileProps) {
+
+
+  // You can handle loading state if fetching data asynchronously
+
   return (
     <div className={styles.container}>
       <div className={styles.profileSection}>

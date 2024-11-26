@@ -30,7 +30,7 @@ export default function EditProfile({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({ userName: name, description: desc, profileImage: image });
+    onSave({ userName: name, description: desc, profilePicture: image });
   };
 
   return (
@@ -56,26 +56,24 @@ export default function EditProfile({
       </div>
       <div className={styles.formGroup}>
         <label htmlFor="profileImage">Profile Image</label>
-        <CldUploadWidget signatureEndpoint="/api/sign-image" onUpload={handleImageUpload}>
-          {({ open }) => (
-            <div>
-              <button
-                type="button"
-                className={styles.fileInput}
-                onClick={() => open()}
-              >
-                Upload Image
-              </button>
-              {image && (
-                <img
+
+        <div>
+              <textarea
+                  id="image"
+                  value={image}
+                  onChange={(e) => setImage(e.target.value)}
+                  className={styles.textarea}
+              />
+
+          {image && (
+              <img
                   src={image}
                   alt="Preview"
                   className={styles.imagePreview}
-                />
-              )}
-            </div>
+              />
           )}
-        </CldUploadWidget>
+        </div>
+
       </div>
       <button type="submit" className={styles.saveButton}>
         Save Changes

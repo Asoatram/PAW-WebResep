@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
       email: user.email,
       recipesPosted: user.recipesPosted || 0, // Misalnya, tambahkan ini jika ada
       description: user.description || 'I love cooking and sharing recipes with others.',   // Misalnya, tambahkan ini jika ada
-      profileImage: user.profileImage || '', // Misalnya, tambahkan ini jika ada
+      profileImage: user.profilePicture || '', // Misalnya, tambahkan ini jika ada
     });
   } catch (e: any) {
     console.error('Error saat mengambil profil:', e.message);

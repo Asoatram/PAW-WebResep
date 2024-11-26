@@ -11,11 +11,11 @@ interface UserProfileData {
   email: string;
   recipesPosted: number;
   description: string;
-  profileImage: string;
+  profilePicture: string;
 }
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<UserProfileData | null>(null);
+  const [user, setUser] = useState<never>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [recipes, setRecipes] = useState([]);
@@ -51,31 +51,39 @@ export default function ProfilePage() {
 
 
 
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
         const res = await fetch('/api/profile', {
           method: 'GET',
-          credentials: 'include', // Pastikan cookies dikirim
+          credentials: 'include',
         });
 
         if (!res.ok) {
           throw new Error(`Failed to fetch profile: ${res.statusText}`);
         }
-        fetchRecipes();
 
         const data = await res.json();
-        setUser(data); // Update state dengan data user
-        console.log(data)
+        setUser(data); // Set the user data in state
+        fetchRecipes(); // Fetch recipes after setting user
+
+        console.log(data); // You can log the data here to check if it's correct
       } catch (err: any) {
-        setError(err.message); // Tangani error
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserProfile();
-  }, []);
+    fetchUserProfile(); // Call the fetch function on mount
+  }, []); // Empty dependency array to run this only once
+
+  useEffect(() => {
+    if (user) {
+      // This will run whenever the user state updates
+    }
+  }, [user]); // Effect runs when the user state changes
 
   if (loading) {
     return <div>Loading...</div>;
