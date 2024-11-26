@@ -40,7 +40,7 @@ export default function Recipe({ params, isSavedProp}) {
     useEffect(() => {
         if (id) {
             // Fetch recipe data
-            fetch(`http://localhost:3000/api/recipes?id=${id}`)
+            fetch(`api/recipes?id=${id}`)
                 .then(res => {
                     if (!res.ok) {
                         throw new Error('Network response was not ok');
