@@ -80,8 +80,8 @@ const UploadRecipe = () => {
         />
 
         <label className="text-xl mb-2">Difficulty</label>
-        <div className="inline justify-start gap-20 mt-2">
-          <label className="flex items-center gap-2 mt-3">
+        <div className="inline justify-start gap-20">
+          <label className="flex items-center gap-2">
             <input
               type="radio"
               name="difficulty"
@@ -181,7 +181,7 @@ const UploadRecipe = () => {
 
         <button
           type="submit"
-          className="p-4 px-8 bg-teal-600 text-white rounded-lg text-xl cursor-pointer self-end w-48 hover:bg-teal-700"
+          className="p-2 px-8 bg-teal-600 text-white rounded-lg text-xl cursor-pointer self-end w-48 hover:bg-teal-700"
         >
           Upload
         </button>

@@ -1,5 +1,4 @@
-// src/app/vegan/page.tsx
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import FoodCard from "@/components/Card";
@@ -24,8 +23,8 @@ export default function VeganPage() {
 
     return (
         <div>
-            <h1>Vegan Recipes</h1>
-            <hr className={"bg-black"}/>
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">Vegan Recipes</h1>
+            <hr className="bg-black" />
             <div className="grid grid-cols-4 gap-4 m-2">
                 {recipes.map((recipe, index) => (
                     <FoodCard
@@ -42,4 +41,3 @@ export default function VeganPage() {
         </div>
     );
 }
-  

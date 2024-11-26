@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 const Carousel = () => {
     const slides = [
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvC1pGhW7_BRwnGuBguLE99tfA0faYflekCA&s",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-NJfsqAVcMSYy9O8d-7f9dQ92Z3A0YNYZwQ&s",
-        "https://images.yourstory.com/cs/7/1da9ec3014cc11e9a1b2b928167b6c62/bowlfoodinside3-1579518185672.png?fm=png&auto=format&blur=500",
+        "/fullfood4.png",
+        "/foodonplate3.png",
+        "/cookfood2.png"
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,7 +18,7 @@ const Carousel = () => {
     };
 
     return (
-        <div className="relative w-full max-w-4xl mx-auto pb-6">
+        <div className="relative w-full max-w-10xl mx-auto pb-6">
             {/* Carousel Container */}
             <div className="overflow-hidden">
                 <div
@@ -30,7 +30,7 @@ const Carousel = () => {
                             key={index}
                             src={slide}
                             alt={`Slide ${index + 1}`}
-                            className="w-full flex-shrink-0"
+                            className="w-full h-[400px] flex-shrink-0"
                         />
                     ))}
                 </div>

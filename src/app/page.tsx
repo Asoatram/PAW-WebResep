@@ -13,7 +13,7 @@ export default function Home() {
         if (isLoggedIn) {
             router.push("/home"); // Trigger navigation after rendering
         }
-    }, [isLoggedIn, router]); // Dependency array ensures it runs when `isLoggedIn` changes
+    }, [isLoggedIn, router]); // Dependency array ensures it runs when isLoggedIn changes
 
     // Render the login card if the user is not logged in
     if (!isLoggedIn) {
