@@ -8,11 +8,27 @@ import { useAuth } from "@/context/AuthContext"; // Correct useRouter hook
 export default function Navbar() {
     const auth = useAuth();
     const router = useRouter();
+    const [data, setData] = useState([])
     const [isOpen, setIsOpen] = useState(false);
-    const [searchText, setSearchText] = useState('');
+    const [searchText, setSearchText] = useState<string>('');
+
+
+
+    const onChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(e.target.value);
+        const response = await fetch('/api/recipes');
+        const data = await response.json();
+        setData(data);
+    };
 
     const searchClick = () => {
         router.push(`/browse?recipe=${searchText}`);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            searchClick(); // Trigger search when Enter is pressed
+        }
     };
 
     return (
@@ -30,13 +46,34 @@ export default function Navbar() {
                     {/* Search Bar */}
                     <div className={"flex items-center space-x-3"}>
                         <input
-                            onChange={(event) => setSearchText(event.target.value)}
+                            onChange={onChange}
+                            value={searchText}
+                            onKeyDown={handleKeyDown} // Add Enter key handling
                             placeholder={"Search food"}
                             className={"border-2 focus:ring-blue-300 focus:border-blue-300 rounded-xl p-2.5 h-10"}
                         />
                         <button className={"rounded-xl py-2 px-3 hover:bg-green-500 bg-green-300"} onClick={searchClick}>
                             Search
                         </button>
+                        {/* Dropdown */}
+                        {searchText && (
+                            <div className="absolute top-full left-100 mt-1 w-80 bg-white border-2 border-gray-300 rounded-xl shadow-md z-10">
+                                {data
+                                    .filter((item) => item.title.toLowerCase().startsWith(searchText.toLowerCase())&& item.title.toLowerCase() !== searchText.toLowerCase())
+                                    .map((item) => (
+                                        <div
+                                            key={item.title} // Use id if available, otherwise use title as fallback
+                                            className="p-2 cursor-pointer hover:bg-gray-100"
+                                            onClick={() => {
+                                                setSearchText(item.title);
+                                                router.push(`/browse?recipe=${item.title}`)
+                                            }}
+                                        >
+                                            {item.title.length > 30 ? `${item.title.substring(0, 30)}...` : item.title}
+                                        </div>
+                                    ))}
+                            </div>
+                        )}
                     </div>
 
                     {/* User Icon */}
