@@ -15,8 +15,12 @@ CommentSchema.pre('save', async function(next) {
         try {
             const maxComment = await this.constructor.findOne().sort({ comment_id: -1 });
             this.comment_id = maxComment ? maxComment.comment_id + 1 : 1; // Start from 1 if no comments exist
-        } catch (error: Error) {
-            return next(error.message); // Pass the error to the next middleware
+        } catch (error) {
+            if(error instanceof Error) {
+                return next();
+            } else {
+                return next();
+            }
         }
     }
     next();

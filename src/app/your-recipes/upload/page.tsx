@@ -17,6 +17,7 @@ const UploadRecipe = () => {
     setDifficulty(e.target.value); // Menyimpan nilai difficulty
   };
 
+  //@typescript-eslint/no-explicit-any
   const handleUploadSuccess = (result: any) => {
     setImageUrl(result?.info?.secure_url); // Ambil URL gambar yang telah di-upload
     console.log('Upload successful:', result);
@@ -30,11 +31,11 @@ const UploadRecipe = () => {
       title,
       description,
       difficulty,
-      cookTime,
-      prepTime,
+      cook_time: cookTime,
+      prep_time: prepTime,
       ingredients,
       instructions,
-      imageUrl, // Menambahkan URL gambar
+      image_url: imageUrl, // Menambahkan URL gambar
     };
 
     // Kirim data resep ke server melalui API
@@ -162,7 +163,7 @@ const UploadRecipe = () => {
           placeholder="Enter instructions"
         />
 
-        <CldUploadWidget signatureEndpoint="/api/sign-image" onUpload={handleUploadSuccess}>
+        <CldUploadWidget signatureEndpoint="/api/sign-image" onSuccess={handleUploadSuccess}>
           {({ open }) => (
             <div>
               <label className="text-xl mb-2" htmlFor="upload">

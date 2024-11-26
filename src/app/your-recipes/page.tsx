@@ -6,12 +6,19 @@ import FoodCard from "@/components/Card";
 import { jwtVerify } from "jose";
 
 interface Recipe {
-  id: string;
+  _id: string;
   title: string;
   description: string;
-  imageSrc: string;
+  image_url: string;
   author: string;
-  rating: string;
+  difficulty: string;
+}
+
+interface jwtIdentity {
+  id: number;
+  name: string;
+  email: string;
+
 }
 
 export default function YourRecipes() {
@@ -19,12 +26,12 @@ export default function YourRecipes() {
 
   const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET as string);
 
-  const getTokenFromCookies = () => {
+  const getTokenFromCookies = ():string => {
     const tokenRow = document.cookie.split('; ').find(row => row.startsWith('token='));
-    return tokenRow ? tokenRow.split('=')[1] : null;
+    return tokenRow ? tokenRow.split('=')[1] : "Not Found";
   };
 
-  const getUserIdFromToken = async (token) => {
+  const getUserIdFromToken = async (token: string):number => {
     try {
       const decoded = await jwtVerify(token, secret);
       return decoded.payload.id;
@@ -36,8 +43,8 @@ export default function YourRecipes() {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const token = getTokenFromCookies();
-      const userId = await getUserIdFromToken(token);
+      const token:string = getTokenFromCookies();
+      const userId:number = await getUserIdFromToken(token);
 
       const response = await fetch(`/api/recipes?profile=${userId}`);
       const data = await response.json();
@@ -56,9 +63,9 @@ export default function YourRecipes() {
         </div>
 
         <div className="grid grid-cols-4 gap-4 m-2">
-          {recipes.map((recipe) => (
+          {recipes.map((recipe, index) => (
             <FoodCard
-              key={recipe.id}
+              key={index}
               id={recipe._id}
               title={recipe.title}
               description={recipe.description}

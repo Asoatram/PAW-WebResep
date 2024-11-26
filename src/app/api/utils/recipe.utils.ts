@@ -1,4 +1,4 @@
-export function parseIngredients(input) {
+export function parseIngredients(input:string) {
     const lines = input.split('\n'); // Split the input into lines
     return lines.map((line) => {
         const [quantity, ...nameParts] = line.split(','); // Split each line at the comma

@@ -12,6 +12,7 @@ export async function POST(request: Request) {
   try {
     // Ambil file dari body request (jika menggunakan base64 atau form-data, Anda dapat menyesuaikan logika ini)
     const body = await request.json();
+    console.log(body)
     const file = body.file; // Pastikan file yang dikirim berupa Base64 atau URL
 
     if (!file) {
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
 
     // Upload ke Cloudinary
     const result = await cloudinary.uploader.upload(file, {
-      folder: "your_folder_name", // Ganti dengan folder tujuan di Cloudinary
+      folder: "v1732618460", // Ganti dengan folder tujuan di Cloudinary
     });
 
     // Return secure_url sebagai response
