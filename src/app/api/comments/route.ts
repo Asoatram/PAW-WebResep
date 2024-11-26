@@ -6,7 +6,6 @@ export async function GET(req: Request) {
     await connectDB(); // Connect to the database
     const { searchParams } = new URL(req.url);
     const param = searchParams.get('recipe_id');
-    console.log(param);
 
     if (param) {
             try {
@@ -34,7 +33,6 @@ export async function GET(req: Request) {
                         }
                     }
                 ]);
-                console.log(comments);
 
                 return NextResponse.json(comments, {status: 200}); // Return the aggregated comments
             } catch (error  ) {
@@ -49,4 +47,20 @@ export async function GET(req: Request) {
             return NextResponse.json({ error: 'Failed to fetch comments', details: error }, { status: 500 });
         }
     }
+}
+
+export async function POST(req: Request){
+    await connectDB();
+    try{
+        const body = await req.json();
+        console.log(body)
+
+        const newComment = new Comment(body);
+        await newComment.save();
+        return NextResponse.json({message: "Comment successfully created"}, {status: 200});
+    } catch (e){
+        console.error(e);
+        return NextResponse.json({"error": e.message}, {status: 500});
+    }
+
 }

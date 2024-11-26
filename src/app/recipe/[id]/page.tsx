@@ -18,42 +18,40 @@ export default function Recipe({ params }) {
     const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Use NEXT_PUBLIC_ prefix
 
     useEffect(() => {
-        if (id) {
-            // Fetch recipe data
-            fetch(`http://localhost:3000/api/recipes?id=${id}`)
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return res.json(); // Return the promise
-                })
-                .then(data => {
-                    if (data.length > 0) {
-                        setRecipe(data[0]); // Set the recipe data
-                        // Fetch comments for the recipe
-                        return fetch(`http://localhost:3000/api/comments?recipe_id=${data[0].recipe_id}`);
-                    } else {
-                        setError('Recipe not found');
-                    }
-                })
-                .then(res => {
-                    if (res && res.ok) {
-                        return res.json(); // Return the promise
-                    } else {
-                        throw new Error('Failed to fetch comments');
-                    }
-                })
-                .then(data => {
-                    if (data) {
-                        setComments(data); // Set the comments data
-                    }
-                })
-                .catch(err => {
-                    console.error('Fetch error:', err);
-                    setError('Failed to fetch recipe or comments');
-                });
-        }
-    }, [id]); // Dependency array to run effect when id changes
+        const fetchRecipeAndComments = async () => {
+            if (!id) return;
+
+            try {
+                // Fetch the recipe data
+                const recipeRes = await fetch(`http://localhost:3000/api/recipes?id=${id}`);
+                if (!recipeRes.ok) {
+                    throw new Error("Failed to fetch recipe data");
+                }
+                const recipeData = await recipeRes.json();
+
+                if (recipeData.length === 0) {
+                    setError("Recipe not found");
+                    return;
+                }
+
+                setRecipe(recipeData[0]);
+
+                // Fetch comments for the recipe
+                const commentsRes = await fetch(`http://localhost:3000/api/comments?recipe_id=${recipeData[0].recipe_id}`);
+                if (!commentsRes.ok) {
+                    throw new Error("Failed to fetch comments");
+                }
+                const commentsData = await commentsRes.json();
+                setComments(commentsData);
+
+            } catch (err) {
+                console.error("Error fetching recipe or comments:", err);
+                setError(err.message || "Failed to fetch recipe or comments");
+            }
+        };
+
+        fetchRecipeAndComments();
+    }, [id]);
 
     // Handle loading and error states
     if (error) {
@@ -98,7 +96,7 @@ export default function Recipe({ params }) {
                 'Content-Type': 'application/json',
             },
 
-            body: JSON.stringify({ recipe_id: recipe.recipe_id, comment: newComment, user_id }), // Include userId in the request body
+            body: JSON.stringify({ recipe_id: recipe.recipe_id, comment_text: newComment, user_id, comment_id: 1}), // Include userId in the request body
         })
             .then(res => {
                 if (!res.ok) {

@@ -11,7 +11,7 @@ interface FoodCardProps {
   description: string;
   imageSrc: string;
   author: string;
-  rating: number;
+  rating: string;
 }
 
 
@@ -24,7 +24,7 @@ function FoodCard({ id, title, description, imageSrc, author, rating }: FoodCard
     router.push(`/recipe/${id}`);
   };
 
-  const truncateDescription = (text, limit) => {
+  const truncateDescription = (text: string, limit: number) => {
     if (text.length > limit) {
       return text.substring(0, limit) + '...';
     }
@@ -44,7 +44,7 @@ function FoodCard({ id, title, description, imageSrc, author, rating }: FoodCard
             </div>
           </div>
           <div className="px-4 pb-4">
-            <h3 className="text-xl font-bold text-gray-800">{title}</h3>
+            <h3 className="md:text-l font-bold text-gray-800">{title}</h3>
             <p className="mt-2 text-gray-600 text-sm">{truncateDescription(description, 50)}</p>
             <div className="mt-4 flex justify-between items-center">
               <span className="text-sm font-medium text-gray-800">{author}</span>
