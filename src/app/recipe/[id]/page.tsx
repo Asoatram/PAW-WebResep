@@ -155,7 +155,7 @@ export default function Recipe({ params, isSavedProp}) {
             const res = await fetch(`http://localhost:3000/api/comments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ recipe_id: recipe.recipe_id, comment: newComment, user_id: userId }),
+                body: JSON.stringify({ recipe_id: recipe.recipe_id, comment_text: newComment, user_id: userId }),
             });
             if (!res.ok) throw new Error('Failed to post comment');
 
