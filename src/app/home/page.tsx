@@ -4,16 +4,17 @@ import FoodCard from "@/components/Card";
 import Carousel from "@/components/Carousel";
 
 interface recipe{
+    _id: string;
     title: string;
     description: string;
     image_url: string;
     author: string;
-    rating: number;
+    rating: string;
     difficulty: string;
 }
 
 export default function Main() {
-    const [recipes, setRecipes] = useState([]); // State to store fetched data
+    const [recipes, setRecipes] = useState<Array<recipe>>([]); // State to store fetched data
 
     useEffect(() => {
         // Define an async function for fetching data
@@ -35,7 +36,7 @@ export default function Main() {
 
     return (
         <div>
-            <p>Hello Everyone!</p>
+            <Carousel/>
             <hr/>
             {/* Render fetched recipes */}
             <div className="grid grid-cols-4 gap-4 m-2">

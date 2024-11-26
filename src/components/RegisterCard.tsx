@@ -23,20 +23,29 @@ export default function SignupCard() {
                 return;
             }
 
-            try {
-                const response = await fetch("/api/users", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ username, email, password }),
-                });
+        try {
+            // Send signup data
+            const response = await fetch("/api/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username: username ,email: email, password: password }),
+            });
+            const data = await response.json();
 
-                if (!response.ok) {
-                    throw new Error("Signup failed");
-                }
+            if (!response.ok) throw new Error("Signup failed");
 
-                const data = await response.json();
+            // Send email verification
+            const emailResponse = await fetch("/api/email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ _id: data.user._id,email: data.user.email, name: data.user.username }),
+            });
+            if (!emailResponse.ok) throw new Error("Failed to send email");
+
                 console.log("Signup successful:", data);
                 if (data.accessToken != null) {
                     login()
