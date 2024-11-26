@@ -9,8 +9,8 @@ export default function Sidebar() {
       {/* Discover Section */}
       <div className={styles.section}>
         <h2 className={styles.title}>Discover</h2>
-        <div className={styles.item}>
-          <Link href="/browse">
+
+          <Link className={styles.item} href="/home">
             <div>
               <img
                 src="/search-svgrepo-com.png"
@@ -20,9 +20,9 @@ export default function Sidebar() {
               <span>Browse</span>
             </div>
           </Link>
-        </div>
-        <div className={styles.item}>
-          <Link href="/saved">
+
+
+          <Link className={styles.item} href="/saved">
             <div>
               <img
                 src="/saved-svgrepo-com.png"
@@ -32,9 +32,9 @@ export default function Sidebar() {
               <span>Saved</span>
             </div>
           </Link>
-        </div>
-        <div className={styles.item}>
-          <Link href="/your-recipes">
+
+
+          <Link className={styles.item}  href="/your-recipes">
             <div>
               <img
                 src="/book-2-svgrepo-com.png"
@@ -44,9 +44,8 @@ export default function Sidebar() {
               <span>Your Recipes</span>
             </div>
           </Link>
-        </div>
-        <div className={styles.item}>
-          <Link href="/profile">
+
+          <Link className={styles.item} href="/profile">
             <div>
               <img
                 src="/profile-1341-svgrepo-com.png"
@@ -57,13 +56,13 @@ export default function Sidebar() {
             </div>
           </Link>
         </div>
-      </div>
+
 
       {/* Categories Section */}
       <div className={styles.section}>
         <h2 className={styles.title}>Categories</h2>
-        <div className={styles.item}>
-          <Link href="/vegan">
+
+          <Link className={styles.item} href="/vegan">
             <div>
               <img
                 src="/leaf-svgrepo-com.png"
@@ -73,9 +72,9 @@ export default function Sidebar() {
               <span>Vegan</span>
             </div>
           </Link>
-        </div>
-        <div className={styles.item}>
-          <Link href="/meat">
+
+
+          <Link className={styles.item} href="/meat">
             <div>
               <img
                 src="/meat-cut-svgrepo-com.png"
@@ -85,9 +84,9 @@ export default function Sidebar() {
               <span>Meat</span>
             </div>
           </Link>
-        </div>
-        <div className={styles.item}>
-          <Link href="/rice">
+
+
+          <Link className={styles.item} href="/rice">
             <div>
               <img
                 src="/rice-svgrepo-com.png"
@@ -97,8 +96,9 @@ export default function Sidebar() {
               <span>Rice</span>
             </div>
           </Link>
-        </div>
+
       </div>
     </div>
   );
 }
+
