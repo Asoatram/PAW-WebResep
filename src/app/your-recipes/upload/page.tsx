@@ -42,7 +42,7 @@ const UploadRecipe = () => {
     const response = await fetch('/api/save-recipe', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/file',
       },
       body: JSON.stringify(newRecipe), // Mengirimkan seluruh data ke server
     });

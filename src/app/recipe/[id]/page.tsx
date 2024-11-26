@@ -5,6 +5,7 @@ import CommentBox from "@/components/CommentBox";
 
 import dotenv from 'dotenv';
 import { jwtVerify } from "jose";
+import {useRouter} from "next/navigation";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ export default function Recipe({ params, isSavedProp}) {
     const [newComment, setNewComment] = useState(''); // State untuk input komentar baru
     // const [isSaved, setIsSaved] = useState(false); // State untuk status saved
     const [isSaved, setIsSaved] = useState(isSavedProp || false);
+    const router = useRouter()
 
     const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_ACCESS_TOKEN_SECRET); // Secret untuk verifikasi JWT
 
@@ -82,7 +84,7 @@ export default function Recipe({ params, isSavedProp}) {
         if (!userId) return;
     
         try {
-            const res = await fetch(`http://localhost:3000/api/save-status?user_id=${userId}&recipe_id=${recipeId}`);
+            const res = await fetch(`/api/save-status?user_id=${userId}&recipe_id=${recipeId}`);
             const { isSaved } = await res.json();
             console.log(`Initial isSaved: ${isSaved}`); // Debugging
             setIsSaved(isSaved);
@@ -152,15 +154,22 @@ export default function Recipe({ params, isSavedProp}) {
         }
 
         try {
-            const res = await fetch(`http://localhost:3000/api/comments`, {
+            const res = await fetch(`/api/comments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ recipe_id: recipe.recipe_id, comment_text: newComment, user_id: userId }),
             });
             if (!res.ok) throw new Error('Failed to post comment');
 
-            const data = await res.json();
-            setComments([...comments, data]); // Tambahkan komentar baru
+            const res2 = await fetch(`/api/comments?recipe_id=${recipe.recipe_id}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+
+            })
+            if(!res2.ok) {throw new Error('Failed to post comment')}
+            const data = await res2.json();
+            console.log(data)
+            setComments( data); // Tambahkan komentar baru
             setNewComment(''); // Reset input komentar
         } catch (error) {
             console.error('Error posting comment:', error);
