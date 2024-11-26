@@ -40,7 +40,7 @@ export default function Recipe({ params, isSavedProp}) {
     useEffect(() => {
         if (id) {
             // Fetch recipe data
-            fetch(`http://localhost:3000/api/recipes?id=${id}`)
+            fetch(`/api/recipes?id=${id}`)
                 .then(res => {
                     if (!res.ok) {
                         throw new Error('Network response was not ok');
@@ -51,7 +51,7 @@ export default function Recipe({ params, isSavedProp}) {
                     if (data.length > 0) {
                         setRecipe(data[0]); // Set the recipe data
                         // Fetch comments for the recipe
-                        return fetch(`http://localhost:3000/api/comments?recipe_id=${data[0].recipe_id}`);
+                        return fetch(`/api/comments?recipe_id=${data[0].recipe_id}`);
                     } else {
                         setError('Recipe not found');
                     }
@@ -112,7 +112,7 @@ export default function Recipe({ params, isSavedProp}) {
             console.log('Current recipe ID:', recipe.recipe_id);
             console.log('Current isSaved state:', isSaved);
     
-            const url = `http://localhost:3000/api/saved`;
+            const url = `/api/saved`;
             const method = isSaved ? 'DELETE' : 'POST';
     
             console.log('Making API call with method:', method);

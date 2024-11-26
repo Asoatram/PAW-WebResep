@@ -20,7 +20,7 @@ export default function Main() {
         // Define an async function for fetching data
         const fetchRecipes = async () => {
             try {
-                const res = await fetch('http://localhost:3000/api/recipes'); // Use HTTP for localhost
+                const res = await fetch('/api/recipes'); // Use HTTP for localhost
                 if (!res.ok) {
                     throw new Error(`Error: ${res.status}`); // Handle errors
                 }

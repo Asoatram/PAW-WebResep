@@ -6,6 +6,8 @@ import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/SideBar";
 import "./layout.modules.css";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { Suspense } from "react";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,11 +26,13 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
+
       {/* Fragment digunakan untuk membungkus elemen JSX */}
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+        <Suspense>
           <AuthProvider>
             {/* The entire layout is wrapped by AuthProvider */}
             <div className="layout">
@@ -39,6 +43,7 @@ export default function RootLayout({
               </div>
             </div>
           </AuthProvider>
+        </Suspense>
         </body>
       </html>
     </>
