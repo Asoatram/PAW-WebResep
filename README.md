@@ -26,9 +26,9 @@ Feastify bertujuan untuk mempermudah hidup sehari-hari dengan memberikan inspira
 ## **Teknologi yang Digunakan**
 
 - **Frontend**: React, Next.js, TailwindCSS
-- **Backend**: Node.js, Express.js
+- **Backend**: Node.js
 - **Database**: MongoDB
-- **Deployment**: Vercel, Cloudinary (untuk penyimpanan gambar)
+- **Deployment**: Vercel
 - **Version Control**: Git, GitHub
 
 ## **Link Video, Presentasi, dan Website**
